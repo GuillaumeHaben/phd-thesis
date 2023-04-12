@@ -1,0 +1,120 @@
+\section{Experimental Results}
+\label{sec:chromium-results}
+
+
+%In this section, we report the results of each research question.
+
+\subsection{RQ1: Discerning flaky from fault triggering test failures when training on tests}
+
+We trained a model on 69,159 passing tests, 910 fault-revealing tests and 8,857 flaky tests (unique tests).
+Then, we evaluated it on 217,503 failures caused by flaky tests and 2,320 fault-triggering failures caused by fault-revealing tests. Table ~\ref{table:rq1} reports the obtained performance. Similar to the performance achieved by previous vocabulary-based models on other datasets, our model was able to reach high accuracy with a precision of 99.2\% and a recall of 98.9\%. However, we note a high false-positive rate. This is due to an important amount (76.2\%) of fault-triggering failures classified as flaky (FP). This is concerning: fault-triggering failures should not be misclassified as they reflect the existence of real faults. Overall, the MCC value is equal to 0.20, which is relatively low and shows that the model struggles (compared to random selection) to identify fault-triggering failures. 
+
+\begin{table}[ht]
+\caption{Vocabulary-based model performance for the prediction of \textit{flaky test failures vs fault-triggering failures} when trained on flaky vs non-flaky (fault-revealing and passing tests). Despite a high accuracy on flaky failures, the low MCC and high FPR show us that it remains challenging for the model to classify negative elements (in our case: fault-triggering failures)}
+\vspace{-1.0em}
+\label{table:rq1}
+\centering
+\begin{tabular}{c|c|c|c} 
+ \toprule
+ \textbf{Precision} & \textbf{Recall} & \textbf{MCC} & \textbf{FPR} \\ [0.5ex] 
+ \midrule
+ 99.2\% & 98.9\% & 0.20 & 76.2\% \\ 
+ \bottomrule
+\end{tabular}
+\end{table}
+
+
+% Figure Confusion matrix
+\begin{figure}[!htbp]
+\centering
+\vspace{-1.2em}
+\includegraphics[width=0.8\textwidth]{figures/chromium/rq1.png}
+\vspace{-1.3em}
+\caption{Confusion matrix for the vocabulary-based model. High accuracy is reached similar to the performance reported in previous works. Nonetheless, 1,768 (76.2\%) out of the 2,320 fault-triggering failures are mislabeled as flaky.}
+\label{fig:confMatrix}
+\end{figure}
+
+
+The confusion matrix of our model decisions is depicted in Figure ~\ref{fig:confMatrix}. The x-axis reports the predicted label and the y-axis the actual label. Correct classifications are displayed in the top left (TN) and bottom right (TP). We clearly observe that the model is able to detect flaky tests with high precision. We also see that 2,435 flaky tests are classified as non-flaky (FN). This number is also important to consider: it translates in all cases where developers will be required to investigate irrelevant failures.
+
+We want to further understand the reasons behind the classification of fault-triggering failures. Therefore, we analyse the (fault-revealing) tests causing those failures. Out of the 2,320 fault-triggering failures, 1,768 are in the set of false positives (76.2\%) among which we found 463 (20\% of all fault-triggering failures) whose tests have a history of flakiness (flakeRate > 0) and 1,305 (56.2\% of all fault-triggering failures) without flakiness history. Here it must be noted that depending on the size of the history considered, we may have more tests with past flakiness or less. Overall in our data, 1/3 of all fault-triggering failures are due to tests that have exhibited flakiness behaviour. 
+
+
+% We want to further understand the reasons behind the classification of fault-triggering failures. Therefore, we analyse the (fault-revealing) tests causing those failures. Out of the 106 unique fault-revealing tests used in our test set, there are 79 tests in the set of false positives (74\% of fault-revealing tests) among which we found 34 to be labelled as flaky tests in the training set and 12 to be labelled as fault-revealing, the 33 tests remaining are tests that do not appear in the training set (new tests). 
+
+% This means the model misclassifies a fault-revealing test as flaky for several reasons: in 43\% of the cases it is a flaky test failing due to a fault, in 15\% of the cases, it is due to the difficulty of the model to recognise the vocabulary of flaky tests from the vocabulary of fault-revealing tests, and in the last 42\% of the cases, the test was no seen in the training data and thus, more challenging to classify. 
+
+\begin{tcolorbox}[
+    left=2pt,right=2pt,top=2pt,bottom=2pt, %margin  
+    arc=0pt, % corners
+    boxrule=1.2pt % line width
+]
+\textbf{RQ1:} Similar to previous studies, we report accurate predictions when aiming at flaky tests. However, a high proportion (76.2\%) of all fault-triggering failures is classified as flaky (missed faults) and still an important number (2,435) of flaky tests are marked as fault-triggering failures (false alerts).
+\end{tcolorbox}
+
+
+\subsection{RQ2: Discerning flaky from fault triggering test failures when training on test failures}
+
+The results from RQ1 show that a vocabulary-based model trained to detect flaky tests would still yield an important number of missed faults and false alerts despite having high accuracy. Thus, our goal with RQ2 is to check whether by training our vocabulary-based model we can improve the performance of recognising fault-triggering failures. 
+
+Table ~\ref{table:rq2and3} reports the results of such a model. In particular, the first row reports results based on failure training while the second row reports results related to RQ3. Similar to RQ1, we see a high precision and recall, 99.7\% and 91.3\% respectively, when predicting flaky failures. More interestingly, the MCC slightly increased to 0.25. 
+
+
+
+
+% Table~\ref{table:rq2} shows the performance of the vocabulary-based flakiness prediction method in two scenarios. When duplicated data is left in the dataset (tests that flaked in multiple builds), the method achieves high performance with a precision of 98\%, a recall of 91\% and an MCC of 87\%. However, when we duplicated tests are removed (representing a scenario where the method is used to detect flaky tests it has not seen before), the performance drops to a precision of 22\%, a recall of 88\% and an MCC of 34\%. The detection of new flaky tests in Chromium thus remains challenging. 
+
+% Figure Confusion matrix
+% \begin{figure}[!htbp]
+% \centering
+% \includegraphics[width=0.5\textwidth]{img/conf_matrix.png}
+% \vspace{-1em}
+% \caption{Confusion matrix for the vocabulary-based model predicting flaky tests vs non-flaky tests. Importantly, 606 non-flaky tests out of the 1,863 are mislabeled as flaky tests (false positives)}
+% \label{fig:confMatrix}
+% \end{figure}
+
+% Figure~\ref{fig:confMatrix} shows the confusion matrix in the no-duplicate case. We observe that flaky tests are overall correctly predicted with 168 tests properly classified as flaky and only 24 misclassified. However, 606 out of 1863 (32.70\%) of non-flaky tests are wrongly classified as flaky. This high number of false positives pose multiple threats. First, as flakiness debugging is already a tedious task for developers, giving them false positives defies the purpose of helping them regain trust in their CI. Second, and perhaps more importantly, non-flaky tests predicted as flaky might be ignored by developers in future builds where they could be fault revealing, leading to undetected regressions.
+
+\begin{tcolorbox}[
+    left=2pt,right=2pt,top=2pt,bottom=2pt, %margin  
+    arc=0pt, % corners
+    boxrule=1.2pt % line width
+]
+\textbf{RQ2:} When training on test failures, solely relying on test code vocabulary as features, to predict if a test failure is flaky or fault-triggering, model performance slightly improves but is still not effective in the context of the Chromium CI.
+% Relying on flaky test predictors to identify previously-unobserved flaky tests in Chromium CI yields a 32.70\% rate of false positives. Ignoring these non-flaky tests wrongly predicted as flaky can have disastrous effects as any regression revealed by those tests would be missed.
+%\textbf{RQ2:} When taking all tests into consideration, the model would perform greatly with an MCC of 87\%. However, detecting unseen flaky tests, even though feasible, is challenging as the precision remains low (22\%) despite a high recall (88\%). The high number of false positives is particularly harmful in the context of the Chromium CI.
+\end{tcolorbox}
+
+\begin{table}[ht]
+\caption{Vocabulary-based model performance for the prediction of \textit{flaky failures vs fault-triggering failures} when training on flaky vs non-flaky (fault-triggering and passing test executions). The approach does not work when solely relying on static features (\ie the test source code) and is improved when considering execution features.}
+%\vspace{-0.5em}
+\label{table:rq2and3}
+\centering
+\begin{tabular}{c|c|c|c|c} 
+ \toprule
+ \textbf{Execution features} & \textbf{Precision} & \textbf{Recall} & \textbf{MCC} & \textbf{FPR} \\ [0.5ex] 
+ \midrule
+ No & 99.7\% & 91.3\% & 0.25 & 20.3\%\\ 
+ Yes & 99.5\% & 98.7\% & 0.42 & 42.3\%\\ 
+ \bottomrule
+\end{tabular}
+\vspace{-1.3em}
+\end{table} 
+
+
+\subsection{RQ3: Improving the accuracy of the flaky test failure predictions}
+
+In this RQ we check the performance of the vocabulary-based models on the failure classification task when considering additional features from the test executions (run duration, and tests' historical flake rate). These features reflect better the characteristics of the test executions and are linked with test flakiness thereby leading to better results. 
+
+In particular, the second row of Table~\ref{table:rq2and3} reports the related performance. We observe an improvement compared to the model that relies only on vocabulary (RQ2). This new model achieves a similar precision and recall of 99.5\% and 98.7\% and an improved MCC value 0.42, indicating a better performance in comparison to randomly picked selections. We see that the FPR increased to 42.3\%. Together, the results can be explained by fewer false alerts: flaky failures being marked as fault-triggering by the model. 
+% This can be explained by our RQ1 results, where we show that 38.28\% of tests that are fault-revealing in at least one build are flaky in at least one other build. Because the vocabulary approach, by construction, does not distinguish different executions of the same test, it misclassifies a subset of the failures of these fault-revealing flaky tests. Adding execution-related features improves the results, though the overall performance remains low (10\% precision, 39\% recall; and 20\% MCC). 
+
+\begin{tcolorbox}[
+    left=2pt,right=2pt,top=2pt,bottom=2pt, %margin  
+    arc=0pt, % corners
+    boxrule=1.2pt % line width
+]
+\textbf{RQ3} When equipped with execution-related features, the vocabulary-based prediction methods do a better job of distinguishing flaky failures from fault-triggering failures (0.42 MCC). Still, the need remains for dedicated methods to successfully learn this challenging classification task.
+
+%Compared to test-focused detection, it appears more challenging to distinguish flaky failures from legit failures. We can improve a bit the performance by adding dynamic features, \ie properties of the test execution. However, further research is still required to improve our ability to discern failure types.
+\end{tcolorbox}

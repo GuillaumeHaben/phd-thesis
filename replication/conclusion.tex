@@ -1,0 +1,26 @@
+\section{Conclusion}
+\label{sec:replication-conclusion}
+
+% Flakiness is one of the main problems in Regression Testing. It easily increases the computational cost of Continuous Integration. Because it is hard to debug flaky tests, developers often spend a long time fixing them. In the worst case, they stop to consider flaky tests even if they could actually reveal a real defect in the program. To improve the efficiency of the CI and to strengthen the trust developers should have in their test suites, we must find ways to fight against this phenomenon. Prior studies tried to categorise and analyse flaky tests in order to get a better understanding of them. Recently, tools like DeFlaker or iDFlakies have been proposed to detect flaky tests. 
+
+This paper explored the usability and performance of vocabulary-based models in predicting flaky tests. 
+We presented a conceptual replication of the study of Pinto \etal, following three axes. 
+\begin{itemize}
+    \item First, we evaluated the prediction performances under a time-sensitive validation setting that better reflects the envisioned use case for the approach.
+We found that a more robust validation has a consistent negative impact on the reported results of the original study (performance degrades by 7\% on average).
+Fortunately, this performance degradation does not invalidate the key conclusions of the study as the model predictions are significantly better than random selections. 
+
+    \item Second, we evaluated the generalisability of a vocabulary-based model to other programming languages. 
+We found re-assuring results that vocabulary-based models are more successful in Python than in Java (average performance of 80\% in Python in contrast to 61\% in Java). We also showed that these models can leverage flaky tests annotated by developers to predict and annotate manifest flaky tests that were not known to developers.
+
+    \item Third, we conducted a comparative study that highlights the impact of features lying in the CUT on the prediction performance.
+    Surprisingly, we found that the vocabulary of the CUT, which is commonly considered as a source of flakiness, does not improve the performance of vocabulary-based models. 
+\end{itemize}
+
+%To do so, we presented our lightweight technique of retrieving the CUT with Information Retrieval. We compare results of our model for our Java and Python subjects, with and without the CUT and conclude that for those projects, and in the case of 
+On top of these findings, this paper presents a new large dataset of flaky tests mined from developer annotations in Python projects on GitHub.
+This dataset and our experiment toolset are available in a comprehensible replication package.
+
+% We do that by building a dataset of 837 labelled flaky tests taken from 9 open-source projects available on GitHub.
+
+% We believe that researchers should continue to explore ways of detecting flaky tests statically and proactively. For future works, we want to look for other approaches to reduce noise. One solution possible to explore is to switch from binary classification to multi-class classification by giving the information on the category of flakiness for each flaky test. This would require larger datasets, but could help to increase precision in our model and might also be used for fault localisation. 

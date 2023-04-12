@@ -1,0 +1,18 @@
+\section{Threats to Validity}
+\label{sec:flakycat-threats}
+
+\paragraph{Internal validity}
+One threat to the internal validity is related to the dataset we used in our study. Flaky tests were gathered from different sources, as explained in Section~\ref{dataset}. It is possible that flaky tests were assigned to the wrong label, which would impact the training and evaluation of our model. Certifying the category based on the test source code is complex and can as well be subjective. To ensure the quality of the data, the first two authors reviewed the collected flaky tests and confirmed their belonging to the assigned category.
+
+Similarly, the identification of statement types in RQ3 required a manual analysis of the most influential statements. 
+Hence, the identified types can be subjective and the assignment of statements is prone to human errors.
+To mitigate this risk, we kept the statement types factual, \eg control flow and asserts.
+This allows us to avoid assignment ambiguities and intersections between the different statement types.
+\paragraph{External validity}
+The first threat to external validity is the generalizability of our approach. In this study, we train a model to recognize flaky tests from four of the most prevalent categories, but we are not sure of the performances in other categories. We discussed the addition of two categories (Network and Randomness), and retrieved that the number of examples is one of the influencing factors. 
+%but our approach might not perform as well as for the categories we considered. 
+
+\paragraph{Construct validity}
+One potential threat to construct validity regards the metrics used for the evaluation study. To alleviate this threat, we report MCC, F1 score, and AUC metrics in addition to the commonly-used precision and recall. As our data is not evenly distributed across the different categories, we report the weighted F1 score.
+
+% Finally, regarding our technique to analyse decisive statements, a threat is that the importance might not rely in one statement only but in bigger context. 

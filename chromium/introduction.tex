@@ -1,0 +1,93 @@
+\section{Introduction}
+\label{sec:chromium-introduction}
+
+
+% Continuous Integration pipeline
+Continuous Integration (CI) is a software engineering process that allows developers to frequently merge their changes in a shared repository~\cite{CI}. To ensure a fast and efficient collaboration, the CI automates parts, if not all, of the development life cycle. Regression testing is an important aspect of CI as it ensures that new changes do not break existing functionality. Test suites are executed for every commit and test results signal whether changes should be integrated into the operational codebase or not.
+
+% Flaky tests
+Tests are an essential part of the CI as they prevent faults from interring the codebase, and they ensure smooth code integration and overall good software function. Unfortunately, some tests, named flaky tests, exhibit a non-deterministic behaviour as they both pass and fail for the same version of the codebase. When flaky tests fail, they send false alerts to developers about the state of their applications and the integration of their changes. 
+
+Indeed, developers spend time and effort investigating flaky failures, as they can be difficult to reproduce, only to discover that they are false alerts ~\cite{Eck2019}. These false alerts occur frequently in open-source and industrial projects~\cite{Bell2018,Kowalczyk2020,Lam2019iDFlakies,LeongSPTM19} and make developers lose not only time but also their trust in the test signal. This trust issue in turn introduces the risk of ignoring fault-triggering test failures. This way, false alerts defy the purpose of software testing and hinder the flow of the CI.
+
+% Existing approaches to detect flaky tests 
+To deal with test flakiness, many techniques aiming at detecting flaky tests have been introduced. A basic approach is to rerun tests multiple times and observe their outcomes. While to some extent effective, test reruns are extremely expensive \cite{LeongSPTM19,Bell2018} and unsafe. To this end, researchers have proposed several approaches relying on static (the test code) \cite{camara2021use,Pinto2020,fatima2021flakify,King2018, LeongSPTM19} or dynamic (test executions) \cite{Bell2018,Lam2019iDFlakies,ziftci2020flake} information (or both) \cite{alshammari2021flakeflagger} to predict whether a given test is flaky. 
+
+Among the many flakiness prediction methods, the vocabulary-based ones~\cite{Haben2021,Pinto2020,Camara2021VocabExtendedReplication,Bertolino2020,olewickiBrown} are the most popular \cite{ParryKHM22}. They rely on machine learning models that predict test flakiness based on the occurrences of source code tokens of the candidate tests. Interestingly, previous research has found these approaches particularly precise, with current state-of-the-art achieving accuracy values higher than 95\% \cite{Pinto2020,fatima2021flakify,camara2021use,Camara2021VocabExtendedReplication,Haben2021}. 
+
+At the same time, vocabulary-based approaches are static and text-based, thus, they are both portable, \ie limited to a specific language, and interpretable, \ie users may understand the cause of flakiness based on the keywords that impact the model's decisions. All these characteristics (precision, portability and interpretability) make vocabulary-based approaches appealing; they are flexible and easy to use in practice. In view of this, we decided to replicate these techniques on an industrial project (the Chromium project) and evaluated their ability to effectively support the detection of flaky tests during the CI operation cycles. %, i.e., flag flaky test failures instead of fault-triggering ones.
+
+Perhaps not surprisingly, we found a similar prediction performance (99.2\% precision 98.4\% recall) to the ones reported by previous studies. Surprisingly though, we noticed numerous fault-triggering failures (approximately 76\% of all fault-triggering failures) being marked as flaky by these prediction methods. This means that, in the case where the Chromium teams were to follow the recommendations of these techniques, they would have missed at least 76\% of all regression faults (considering their respective test failures as flaky) that were captured by their test suites. 
+
+The %paradox of having high flaky test prediction precision and 
+significantly  high fault loss experienced (fault-triggering failures considered as flaky) motivated the investigation of the fault-triggering failures. To this end, we made the following three findings: 
+\begin{itemize}
+    \item \textit{Flaky tests have a strong fault-revealing capability}, \ie more than \nicefrac{1}{3} of all regression faults are triggered by a test that exhibits flaky behaviour at some point in time. This means that methods aiming at detecting flaky tests, inevitably flag as flaky fault-triggering test failures made by these tests. This indicates an inherent limitation of all methods focusing on identifying flaky tests, a fact that is largely ignored by previous studies.
+    
+    \item \textit{Many fault-revealing tests have characteristics similar to flaky ones} and thus, are mistakenly flagged as flaky by the flakiness prediction methods. %While such mistakes are expected, given the predictive nature of the approaches, these are expected to be low given the 99.2\% prediction precision we have. However, 
+    In our data, the set of fault-triggering failures made by non-flaky tests that is mistakenly predicted as flaky represents 56.2\% of all fault-triggering failures. 
+
+    \item \textit{The majority of the flaky tests fail frequently (87.9\% of the flaky tests have also flaked in the past)}, making prediction methods mark them as flaky based on the test history, instead of the characteristics of their failures. In particular, a dummy method that classifies as flaky any test that flaked at least once in the past achieves precision and recall values of 99.8\% and 87.8\% when predicting flaky test failures.%, explaining the high accuracy we find. %However, in practice developers need to minimize both the number of fault-triggering failures missed and false alarms. 
+\end{itemize}
+
+The above findings motivate the need for techniques focusing on flaky test failures, instead of flaky tests, \ie discriminating between fault-triggering and flaky test failures, an essential problem that has largely been ignored by previous research \cite{Parry2021}. Therefore, we adapt the vocabulary-based methods for failure-focused predictions and check their performance. Although they miss fewer fault-triggering test failures than the test-focused methods (20.3\% FPR compared to 76.2\% FPR), their ability to detect fault-triggering failures remains poor, MCC value of 0.25. 
+
+With the hope of improving the methods' performance, we augment their feature set with dynamic features related to (flaky) test executions (\eg run duration and historical flake rate) that we find useful for flakiness diagnosis. We achieve a better --but still not acceptable performance -- MCC value of 0.42, indicating an improvement to detect fault-triggering failures when considering dynamic features. 
+
+Overall, our study demonstrates the need for methods that can effectively predict flaky test failures (instead of flaky tests), to reduce the faults missed, and the need for adopting more thorough experimental methodologies, reflecting the needs of the domain of the actual practice (not just classification metrics), when evaluating flakiness predictions. 
+
+In summary, the contributions of our paper are:
+\begin{itemize}
+    \item We present \textit{a large empirical study on flakiness prediction, based on the Chromium project} -- one of the biggest open-source industrial projects -- involving 10,000 builds, more than 200,000 unique tests and 1.8 million test failures. Our study is the first to study the suitability of applying flakiness prediction into a CI pipeline by focusing on the potential losses that they introduce: missed fault-triggering failures.  
+    
+    \item We provide empirical evidence that flaky test prediction methods, despite being very precise, are practically non-actionable since they \textit{flag as flaky a majority, approximately 76.2\%, of all fault-triggering failures} (56.2\% due to misclassifications of fault-revealing tests and 20\% due to correct classification of flaky tests that reveal faults).
+
+    \item We provide empirical evidence that \textit{flaky tests have strong fault-revealing capabilities}, indicating an inherent limitation of existing methods. At the same time, our results motivate the need for failure-focused prediction techniques. Unfortunately, we also show that existing vocabulary-based methods are insufficiently precise, calling for additional research in this area.  
+
+    \item We investigate whether \textit{imbuing the training data with additional dynamic features can enhance the failure prediction effectiveness}. These results show  improvement (MCC values are up to 0.42), but indicate that more work remains to be done to develop deployable flakiness prediction for real-world systems.
+   
+\end{itemize}
+
+
+
+
+
+% They can be divided into three families: static, dynamic and hybrid. Static approaches do not require test executions. They often have the goal of remaining lightweight, \ie using features that are easily retrievable such as code vocabulary~\cite{Haben2021,Pinto2020,Camara2021VocabExtendedReplication} and test smells~\cite{camara2021use,Pontillo}. 
+% %or others~\cite{fatima2021flakify,King2018}. 
+% Dynamic approaches require test executions, which tend to yield better detection results, but also incur more costs and usability challenges. 
+% % Notably, Deflaker~\cite{Bell2018} and IDFlakies~\cite{Lam2019iDFlakies} are designed to use a minimal number of reruns. ShakeIt~\cite{Silva2020} identifies flaky tests by stressing the execution environment. Studies making use of code coverage information also emerged~\cite{FlakinessGoogle,Shi2019Mitigating}. 
+% Finally, hybrid approaches are relying both on static features and dynamic features like FlakeFlagger~\cite{alshammari2021flakeflagger}.
+
+% Problematic
+%Because flaky tests are hard to fix~\cite{Eck2019,Habchi2022Qualitative}, developers typically quarantine them or ignore their outcome when running the whole test suite on a modified code base. This practice is risky because important information about the quality and correctness of the code covered by flaky tests can be lost. In particular, regressions (faults) can be missed, leading to the deployment of a buggy version of the software in production. Perhaps worse, the prediction approaches based on machine learning are inherently imperfect (due to their statistical nature) and may accentuate the number of missed regressions by flagging benign tests as flaky.
+
+
+% Goal of the paper
+%In this paper, we seek to investigate, in a real-world case, to what extent the prediction and quarantine of flaky tests affect the effectiveness of regression testing. We focus our case study on the Chromium project -- one of the biggest open-source projects with open access to the CI history including test results. We mined 10,000 Chromium builds from the CI history, totalling more than 200,000 unique tests and 1.8 million test failures.
+
+%We first investigate the prevalence of critical cases where regressions are identified by flaky tests and the number of concerned builds. Special consideration should be addressed in those perilous cases as flaky test signals are known to be neglected. Next, as research mostly focuses on the binary classification of flaky tests and non-flaky tests, we evaluate the performance of the vocabulary-based methods to detect flaky tests in Chromium. More specifically, we are interested in the number of false positives -- benign tests predicted as flaky -- because wrongly quarantining them would increase the critical signals ignored by developers.
+
+%The paradox between the false alarms raised by flaky tests and the risk induced by ignoring them leads us to consider the prediction of \emph{flaky failures} as an essential problem that past research has largely ignored \cite{Parry2021}. We, thus, evaluate whether the same approaches for flaky test prediction can be tuned (by adding features specific to each test execution in addition to traditional features) to predict flaky failures. This would reveal an apparent proximity (or lack thereof) between the two problems and assess the need for dedicated solutions.
+
+%Overall, our study investigates and answers the following research questions:
+%\begin{itemize}
+%\item \textbf{RQ1:} How often are regressions identified by flaky tests? \\
+%\textbf{Findings:} We report a high number of flaky tests in all builds (178 on average). 1,766 builds include regressions that are detected only by flaky tests and this represents 73\% of all builds with regressions. Meanwhile, out of the 2,343 tests revealing regressions, 897 (i.e. 38\%) are flaky. This demonstrates that ignoring flaky tests entirely would result in missing a significant number of regressions. These results combined also reveal that when a flaky test reveals a specific regression, it is the only test that does so.
+
+%\item \textbf{RQ2:} How accurate are flaky test prediction methods on Chromium? \\
+%\textbf{Findings:} The vocabulary-based model we built (replicating previous work) has a precision of 22\%, a recall of 88\% and an MCC of 34\%. The model is able to find a large proportion of flaky tests but mislabels 32\% of all non-flaky tests as flaky. This is disastrous because developers blindly applying prediction methods to ignore flaky tests could miss many cases of regression. More generally, the performance of prediction methods is below the ones reported in previous studies~\cite{Pinto2020,Haben2021,Camara2021VocabExtendedReplication}, indicating that Chromium is a more challenging ground for flaky test prediction.
+
+%\item \textbf{RQ3:} How accurately can we predict flaky failures from fault-triggering failures? \\
+%\textbf{Findings:} We show that solely relying on static features (previously used for flaky test prediction) poorly predicts flaky failures. Our model obtained an MCC of 4\%. Adding dynamic features related to (flaky) test executions (\eg run duration and flake rate) improves the performance with an MCC of 20\% but remains unacceptable. This demonstrates that the same solutions used to identify flaky tests are not applicable to this new problem, and raises the need for new research approaches for flaky failure prediction.
+%\end{itemize}
+
+%%% INSERT here a concluding paragraph like "Overall, through our study we... [demonstrate/shed light on] ... + key take away message for research. => Perhaps @MIKE will have a nice formulation?
+
+To support future research, we share our dataset, experimental data and related code, in a replication package.\footnote{https://anonymous.4open.science/r/ChromiumFlakyFailures}
+
+%The remaining of this paper is organised as follows: 
+%Section~\ref{section:related} discusses related works.
+%Section~\ref{section:chromium} presents the Chromium CI and Section~\ref{sec:dataset} our data collection process.
+%Section~\ref{sec:evaluation} presents the different research questions in details and the methodology we used to answer them.
+%Section~\ref{sec:results} presents the case study results. 
+%Section~\ref{sec:discussion} discuss the implication of the results in more depth. Section~\ref{sec:threats} discusses the threats to validity and finally, Section~\ref{sec:conclusion} concludes with the main findings.

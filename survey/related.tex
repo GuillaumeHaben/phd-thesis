@@ -1,0 +1,37 @@
+\section{Related work}
+\label{sec:survey-related}
+
+The first study on test flakiness was carried out by Luo \etal~\cite{luo_empirical_2014}. 
+They analysed 201 commits from 51 open source projects in order to understand the root causes of flaky tests. % and the strategies used by developers to fix them. 
+They showed that Async Waits, concurrency, and test order-dependency are the main categories of flakiness.
+Later, many techniques were proposed to detect flaky tests with minimal resources, relying on reruns~\cite{lam_idflakies_2019}, coverage analysis~\cite{bell_deflaker_2018}, or static and dynamic test features~\cite{Pinto2020,alshammari2021flakeflagger,haben-msr}.
+Other studies focused on highlighting the effects of flakiness on mutation testing and program repair~\cite{flakime}.
+
+%Later Lam \etal~\cite{Lam2020} analysed 55 Java projects to understand the introduction of flakiness in software systems. 
+%They found that 75\% of the 245 detected flaky tests were already flaky when added to the test suite, thus justifying the need to run detectors on newly-introduced tests. 
+%The study of Luo \etal was replicated by Thorve \etal~\cite{Thorve2018} on Android applications where they found new root causes of flakiness: dependency, program Logic, and UI. 
+%Dutta \etal~\cite{dutta_detecting_2020} conducted an extensive study on flaky tests (causes and fixes) in machine learning applications, finding that algorithmic non-determinism represents the biggest source of flakiness.
+
+Several studies have been conducted to inspect flakiness in industrial contexts.
+%highlighting the importance of this the challenge it represents and the necessity for solutions to this problem.
+Lam \etal conducted two studies \cite{Lam2019RootCausing,lam_study_2020} about flaky tests at Microsoft. The first study showed that the number of build failures can quickly become significant despite having a low number of flaky tests. 
+Thence, they introduced \textit{RootFinder}, a tool that identifies the root causes of flaky tests by analysing differences in test logs and spotting suspect method calls. 
+In their second study, Lam \etal presented \textit{FaTB}, an automated tool that speeds the runtime of test suites by lowering timeouts and waits without impacting the overall test suite flake rate. 
+Leong \etal~\cite{LeongSPTM19} studied flaky tests at Google and found that more than 80\% of test output transitions are caused by flakiness. 
+% In their study, they also showed that flakiness systematically overestimated the performance when evaluating regression testing techniques.
+At Apple, Kowalczyk \etal~\cite{Kowalczyk2020} introduced a flakiness scoring system and showed its ability to reduce flakiness by 44\%. 
+
+Eck \etal~\cite{eck_understanding_2019} surveyed 21 Mozilla developers, asking them to classify 200 flaky tests in terms of root causes and fixing efforts. 
+%They found that flakiness is perceived as a significant problem regardless of the team and project size. 
+This study highlighted four new categories of flakiness: restrictive ranges, test case timeout, test suite timeout, and platform dependency.
+It also provided evidence about flakiness from the CUT and showed that flaky tests can have organisational impacts.
+In this study, we leverage a different qualitative approach (interviews) to address other aspects of flakiness in practice.
+More specifically, we investigate broader sources of flakiness (\eg SUT and infrastructure) instead of the root causes (\eg concurrency and timeouts).
+Our study also inspects the actions taken by practitioners in order to prevent, detect, and alleviate flaky tests.
+Result-wise, our findings confirm the observations of Eck \etal about (i) the impact of flakiness on the test suite reliability and (ii) the challenges of reproducing and debugging flaky tests.
+Furthermore, we highlight new flakiness impacts, on testing practices and product quality, and we synthesise a list of automation challenges for flakiness mitigation.
+
+
+%Finally, \etal~\cite{ahmad_empirical_2019} carried out another survey of developers from 4 Swedish companies and identified 23 factors affecting flakiness.
+
+%Add result wise

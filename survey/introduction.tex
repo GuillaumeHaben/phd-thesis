@@ -1,0 +1,58 @@
+\section{Introduction}
+\label{sec:survey-introduction}
+
+%Integration testing is the process of combining software units that were developed separately to test if they work together~\cite{Integrat56:online}.
+Software Testing is critical for modern software development as it allows the concurrent implementation and integration of features. %,  integrate well and do not break existing ones.
+At Google, more than 50 million test cases are executed every day to ensure the quality of their products~\cite{Welcomet41:online}.
+%How important is integration testing: costs spent on it
+%However, in the last few years,
+Though, test automation faces major problems with the emergence of  flaky tests % as one of the main threats to the reliability of this process
+~\cite{FlakinessGoogle,Mozilla,FlakinessSpotify}. Flaky tests are tests that, for the same versions of code and test, can pass and fail on different runs.
+Such non-determinism sends confusing signals to developers who struggle to interpret the test results. %  and need to decide whether or not to integrate the new features
+As a result, developers lose trust in test suites, disregard their signals and integrate features containing real failures, thereby nullifying the purpose of testing.
+
+Flaky tests are prevalent in large software systems and they incur significant cost.
+Google reports indicate that 16\% of their tests exhibit some flakiness whereas 84\% of the transitions from pass to fail involve a flaky test~\cite{FlakinessGoogle}.
+This entails enormous computational resources since 2-16\% of the company's testing budget is dedicated to rerun flaky tests~\cite{GTAC2016}.
+%or reruns and introduce costly delays into the core development process~\cite{FlakinessGoogle}.
+%Add other examples from the Apple paper
+
+In response to this challenge, researchers dedicate their efforts in understanding the nature of flaky tests and the way they manifest.
+Empirical studies examined the root causes of flaky tests in open-source software~\cite{luo_empirical_2014,eck_understanding_2019,Thorve2018,dutta_detecting_2020} and industrial systems~\cite{Lam2019RootCausing}, showing that concurrency and order-dependency are among the main categories of test flakiness. 
+Notably, the study of Eck~\etal~\cite{eck_understanding_2019} showed that flakiness can stem from the code under test and highlighted its potential impact on organisational aspects like resource allocation.
+
+Other studies investigated tools and techniques that could help developers to cope with test flakiness.
+Automated tools, such as DeFlaker~\cite{bell_deflaker_2018}, iDFlakies~\cite{lam_idflakies_2019}, and FlakeFlagger~\cite{alshammari2021flakeflagger} have been developed in order to detect flaky tests with a minimum number of test runs or re-runs. Unfortunately, these advances offer only partial solutions to the problem and may not fit well within the development systems and organisation constraints. For instance, DeFlaker relies on coverage and reruns of tests that do not execute changed code, which are not possible in specific development environments that use regression test selection or when coverage cannot be obtained.     
+Furthermore, the fixing of flaky tests gained traction as studies investigated the fixing effort devoted for flaky tests and tools like \cite{shi_ifixflakies_2019} are designed to fix flaky tests.
+Nonetheless, in order to devise flakiness solutions, we need to understand how developers deal with flaky tests in practice.
+In particular, it is necessary to identify the typical measures taken by practitioners when dealing with flaky tests, and reflect on how research solutions could assist and improve them.
+% Hence, in order to devise solutions, we need to understand how developers deal with flaky tests in their daily work. In particular, it is necessary to identify the typical measures taken by practitioners when dealing with flaky tests, and reflect on how research could assist and improve them.
+
+To shed some light on these questions, we conduct an empirical study focused on the industrial context in which flakiness manifests. % and the current state of practice regarding its mitigation.
+Specifically, we perform a qualitative analysis on data collected from 14 practitioner interviews to answer the following research questions:
+
+
+\begin{itemize}[wide=10pt,noitemsep,topsep=0pt]
+    \item \textbf{\textsc{Rq1:}} Where can we locate flakiness?\\
+    \textit{\textbf{Goal:}} Differently from previous studies~\cite{luo_empirical_2014,eck_understanding_2019,Thorve2018,dutta_detecting_2020,Lam2019RootCausing}, which focused on the root causes of flakiness, \eg concurrency and timeouts, we aim to identify where flakiness stems within the different components of the development ecosystem, \eg test, code under test, and infrastructure. This localisation is necessary to guide both detection and fixing approaches.\\
+    \textit{\textbf{Results:}} In addition to tests, flakiness stems from the poor orchestration between the system components, the testing infrastructure, and external factors, \eg OS and firmware. Studies should consider and leverage these factors when addressing flaky tests and not focus solely on the test and code under test.
+    
+    \item \textbf{\textsc{Rq2:}} How do practitioners perceive the impact of flakiness?\\
+    \textit{\textbf{Goal:}} This question is commonly discussed in industrial reports and research studies. In this paper, 
+    we examine it through direct discussions with practitioners. The aim is to understand the impact of flakiness on the development workflow and practices. \\
+    \textit{\textbf{Results:}} Besides dissipating development time and hindering the continuous integration (CI), flakiness affects the testing practices and leads to a degradation of the system quality. We also shed light on the pernicious consequences of system flakiness, \ie buggy or non-deterministic features that are falsely labelled as flaky tests.
+    
+    \item \textbf{\textsc{Rq3:}} How do practitioners address flaky tests?\\
+    \textit{\textbf{Goal:}} This question aims at identifying and understanding the measures taken by practitioners to address flakiness before and after it manifests in the CI.\\
+    \textit{\textbf{Results:}} 
+    %Our analysis shows that depending on their resources, practitioners deal with flakiness differently. 
+    The prevention of test flakiness is performed by building stable infrastructures and enforcing guidelines, whereas the detection still relies mainly on reruns and manual inspection. Our results also highlight monitoring and logging tasks, which are commonly dismissed in research, yet they are key to most of the mitigation measures taken by practitioners.
+    
+    \item \textbf{\textsc{Rq4:}} How could mitigation measures be improved with automation tools?\\
+    \textit{\textbf{Goal:}} This question aims to identify specific needs to be addressed by future research. \\
+    \textit{\textbf{Results:}} We accentuate the need for techniques that monitor and analyse the system states to assist the prediction, debugging, and fine-grained evaluation of flaky tests.
+    Our participants also expressed the need for automating the quality assessment of software tests through static analysis and variability-aware reruns, \ie reruns under diverse system configurations. 
+    %confirm previous findings about the difficulty of reproducing and identifying the root causes of flaky tests~\cite{eck_understanding_2019}
+\end{itemize}
+
+We believe that the qualitative results of this study are necessary to complement the current understanding of flakiness and advise future work.  

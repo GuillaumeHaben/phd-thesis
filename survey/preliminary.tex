@@ -1,0 +1,51 @@
+\section{Preliminary Analysis}
+\label{sec:survey-preliminary}
+
+%The main objective of this study is to understand the measures adopted by practitioners when dealing with flaky tests.
+We conduct a grey literature review (GLR) to establish an initial mapping of the measures adopted by practitioners when dealing with flaky tests.
+This mapping lays the foundation for our mitigation analysis (RQ3) and helps in guiding our interview design.
+With respect to this objective, this GLR is exploratory and non-exhaustive.  
+In the following, we explain our process for collecting, evaluating, and analysing data from the grey literature.
+\paragraph{Search}
+We followed the recommendations of Kitchenham and Charters~\cite{kit_cha_2007}, for the reviewing process in general, and the guidelines of Garousi \etal~\cite{garousi2019guidelines} for the aspects specific to grey literature.
+The research question for our review is:
+\begin{itemize}
+    \item \textsc{\textbf{RQ3:}} How do practitioners address flaky tests?
+\end{itemize}
+In order to answer this question, we focused our review on materials published by practitioners describing their mitigation of flakiness, \eg technical reports, presentations, blogs, etc.
+To collect these materials, we queried the advanced Google search engine with the following string:
+\texttt{(Mitigate OR Manage OR Deal OR Control OR Avoid OR Prevent OR Tools OR Identify OR Detect) AND (Flaky OR Intermittent OR Unreliable OR non-deterministic) AND Tests}.
+
+This query resulted in $276,000$ results.
+We manually checked the top 100 articles and only accepted articles that:
+\begin{itemize}
+    \item Are written by practitioners. Articles and Blog posts written by researchers are excluded.
+    \item Depict practitioners' views on flakiness and do not only address the problem theoretically.
+\end{itemize}
+We found that only 56 articles correspond to the searched material as a large part of the top-100 articles were dedicated to the introduction of flakiness without addressing its mitigation.
+% Indeed, many articles are not based on practitioner views and they only explain the issue of flaky tests theoretically.
+% We also found several formal literature articles or blogs that are inspired by them.
+% We excluded these articles and focused on sources that reflect practitioner practices.
+%The search engine and query 
+%The inclusion criteria
+\paragraph{Analysis}
+The objective of this step is to identify and categorise the flakiness mitigation measures from the selected articles.
+For this purpose, we first examined the 56 articles to check their adequacy for our analysis.
+We relied on the quality assessment checklist presented by Garousi \etal~\cite{garousi2019guidelines}, which is specifically designed for grey literature sources.
+We found that three factors are particularly relevant in our context and we adopted them as exclusion criteria:
+\begin{itemize}[wide=10pt,noitemsep,topsep=0pt]
+    \item \textbf{Objectivity:} We exclude sources where the authors have a clear vested interest. For instance, articles that promote new tools or plugins for mitigating flaky tests are generally biased.
+    \item \textbf{Method adequacy:} We found that very few sources have a clearly stated their aim and methodology. However, from the presented content, we could identify articles that were not based on practical experience and exclude them. 
+    For instance, in several cases, the authors present mitigation measures from a compilation of other sources and not based on their own experiences.
+    \item \textbf{Topic adequacy:} We checked whether the articles enrich our analysis or not. More specifically, we excluded articles that do not present any mitigation measures for flaky tests.
+\end{itemize}
+The full quality assessment is available with our artefacts~\cite{artefacts}.
+Based on the three exclusion criteria, we selected 38 articles that fit within the study scope and objectives.
+Two authors read these articles and iteratively synthesised a classification of the measures described by practitioners.
+This consensual process is similar to the qualitative analysis performed on the interview transcripts (\textit{cf.} Section~\ref{sec:survey-interviews}).
+%We found that the adopted strategies fall in three major categories: prevention of flaky tests, detection of flakiness before or after its manifestation, and mitigation actions taken when a test is identified as flaky.
+The results of this analysis are presented in Table~\ref{table:strategies} and will be discussed in Section~\ref{sec:survey-results}.
+Interestingly, in our grey literature analysis, we observed that the articles do not explain the rationale behind the choice of measures.
+Similarly, the consequences of the measures are generally dismissed.
+Hence, we try to address these gaps in our interviewing process.
+

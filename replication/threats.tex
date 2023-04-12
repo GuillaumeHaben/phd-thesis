@@ -1,0 +1,67 @@
+\section{Threats to validity}
+\label{sec:replication-threats}
+
+
+
+
+
+
+
+\subsection{Construct Validity}
+One possible threat to the study's construct validity is our choice and selection of flaky tests in Python.
+It is possible that tests that are marked as flaky by developers are not actually flaky.
+In particular, developers could abuse of the annotation and mark non-flaky tests to forecast flaky behaviour.
+To inspect this point, we manually analysed projects from our dataset to check if this behaviour is prevalent.
+We found that some projects (like Jira and Python-telegram-bot) use the annotations to mark all class tests as flaky.
+However, this usage seems judicious as the class tests performed GUI testing, which is known for being a major cause of flakiness.
+Moreover, an abusive usage of this annotation by developers seems unlikely considering the rerun costs.
+When running the test suites, we observed that one pass can take a long time.
+Hence, it is not in the best interest of developers to mark as many tests as flaky to anticipate flakiness as this would largely increase the execution time as soon as there are test failures. 
+We believe that the usage of annotated flaky tests in our study is reasonable given the lack of large datasets of flaky tests, especially for programming languages other than Java.
+Ideally, the annotated flaky tests would be validated by rerunning them and exhibiting their non-deterministic behaviour.
+Nevertheless, the reproduction remains very challenging for flaky tests in general and even tests identified in other datasets are hardly reproducible~\cite{Pinto2020,Lam2020}.
+%Even with the DeFlaker dataset, which is, to our knowledge, the largest one existing to this date, most of the flaky tests are contained in one project (Oozie). It is difficult to find many flaky tests in one project, at least for open source projects that were studied. 
+
+Another threat to construct validity could be our approach for retrieving the CUT. 
+Intending to design a fast and lightweight approach, we used Information Retrieval to estimate the real code coverage of each test. 
+This approximation can be responsible for the noise brought in the features. 
+To investigate this point, we assessed the CUT effect when using other retrieval approaches. 
+First, we retrieved an approximation of the CUT by using Static Call Graph. 
+%Because the number of functions can easily explode when exploring the call graph, we stick to a depth level of 1: 
+We selected all functions called by the test as the CUT and we do not explore what those functions call. 
+Even if this approach only includes a subset of the CUT and flakiness can be caused by functions deeper in the call graph, we believe that keywords in the top functions should serve as proxy.
+Results for this approach were similar to the ones presented in \textsc{RQ3}.
+The performance scores slightly decrease or increase from one project to another without showing a significant impact on the prediction performance. 
+Furthermore, we computed the code coverage for projects where we managed to build and run the test suite.
+This task is challenging, especially in Java where the flaky revisions are from several years ago and dependencies are easily missing from central repositories. 
+We successfully retrieved the real code coverage for revisions of Togglz and Oryx using the GZoltar tool~\cite{GZoltarA61:online}.
+This tool allows us to get a coverage matrix representing each line covered by the test case. 
+We used this matrix to retrieve the exact CUT and include it as a feature for our prediction model.
+For both projects, the CUT inclusion had an impact on the model performance, which is very similar to the one observed with the CUT retrieved with IR.
+Hence, we believe that the results observed in \textsc{RQ3} are not flawed by the CUT retrieval. 
+
+\subsection{Internal Validity}
+One possible threat to internal validity is the definition of non-flaky tests.
+The datasets that we used for both Java and Python, only mark flaky tests and do not provide information about non-flaky tests.
+Consequently, we considered all tests that were not marked as flaky to be non-flaky.
+Yet, some of these tests can be flaky even though DeFlaker or the developer did not mark them as such.
+This limitation is not unique to our study as it is theoretically impossible to prove that a test is not flaky.
+To the best of our knowledge, there are no datasets, neither in formal nor in grey literature, that mark explicitly non-flaky tests.
+On top of that, our study results show that there is a clear distinction between the classes of flaky and non-flaky tests.
+Accordingly, it is unlikely that a significant fraction of the non-flaky tests is actually flaky.
+
+One common threat to the internal validity of replication studies is potential errors in the reproduction (\eg settings and library usage). 
+To alleviate this threat, we carefully examined the GitHub repository of the original work~\cite{damorimR19:online} to understand and reproduce their implementation details. 
+%We tried to build our implementation as similar as possible. Still, we might not have used the same libraries or the same settings all the time, 
+Besides, the goal of our study is not to exactly reproduce the original work and our results align well with the original findings.
+
+\subsection{External Validity}
+The main threat to our external validity is the size and nature of our datasets.
+For Java, we relied on the DeFlaker dataset since it is the largest open-source set of flaky tests and it has already been used in many flakiness studies~\cite{Bertolino2020,Pinto2020}.
+As for Python, we built a dataset of 837 flaky tests from 9 projects by mining GitHub repositories.
+For the sake of generalisability, it would have been preferable to include more projects and flaky tests.
+Nevertheless, our intra-project setting required a minimum number of flaky tests per project and limited our choices.
+We encourage future studies to replicate this study on larger datasets, including industrial projects.
+
+
+

@@ -1,0 +1,22 @@
+\section{Interpretability}
+\label{sec:flakycat-interpretability}
+
+% What is interpretability
+Model interpretability refers to one's ability to interpret the decisions, recommendations, or in our case the predictions, of a model. Interpretability is a crucial step to increase trust in using a machine learning model. Indeed, it allows model creators to investigate potential biases in the learning processes and better assess the overall performance of their models.
+On top of that, providing developers with information about how the model came to its prediction can enhance the model adoption~\cite{carvalho2019machine}. 
+
+% Existing techniques
+Flakiness prediction approaches often relied on Information Gain to explain what features in the model appeared to be the most useful~\cite{Pinto2020,FlakeFlagger,camara2021use}. In the case of tree-based models, the reported information gain is given by the Gini importance (also known as Mean Decrease in Impurity)~\cite{Featurei12:online}.
+Parry \etal~\cite{flake16} used SHapley Additive explanations (SHAP), which is another popular technique for model interpretability~\cite{shaponline}. 
+
+% Use of CodeBERT increasing
+As FlakyCat uses the CodeBERT representation of tests as input, using the previously mentioned techniques would not give understandable features. To our knowledge, there are no existing techniques used for CodeBERT-based model interpretability. Thus, we introduce a novel approach to better understand the decisions of CodeBERT-based models. Following the main motivation of helping developers better understand flaky tests once detected, our goal with this interpretability technique is to arm FlakyCat users with a more fine-grained explanation for the model's decision.
+
+% Our technique
+Our technique is inspired by delta debugging algorithms. Delta debugging is used to minimize failure-inducing inputs to a smaller size that still induces the same failure~\cite{zeller2002simplifying}. In our case, we are interested in the particular code statements linked with the most influential information for the model's decision.
+To identify them, we proceed with the following: We classify all the original test cases and save their similarity scores. We create new versions of each test. Each version is a copy of the original test minus one statement that was removed. 
+%We split statements in the test code based on the semicolon (statement separator token in Java). 
+Next, we feed the new versions to FlakyCat. Among all new versions for one test, we keep the one for which the similarity score endured the biggest drop compared to the original prediction score. 
+We consider the statement removed in this version as the most influential one.
+% When flakiness categorization results are presented to developers, the most influential statement can be highlighted to explain the rationale behind the assigned category.
+% We can also envision scenarios where multiple influential statements are highlighted gradually based on their contribution to the classification result.

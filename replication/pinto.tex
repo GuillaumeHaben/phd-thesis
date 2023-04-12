@@ -1,0 +1,66 @@
+\section{The Pinto Study}
+\label{sec:replication-pinto}
+
+
+This work is a replication of the study by Pinto \etal \cite{Pinto2020}. 
+In this section, we briefly summarise the approach they presented for flakiness prediction. 
+We first present the dataset of existing flaky tests which they used in their study. Then, we explain their source code representation and prediction model. 
+Finally, we recall their evaluation methodology and results. 
+
+% \subsection{Motivation}
+% Flaky tests are, by nature, challenging to detect especially if they flake rarely or only in certain conditions.
+% This also hinders their reproduction and make them also difficult to debug and fix by developers.
+% In order to improve quality and trust in the test suites, one solution is then to develop a cheap, automated and fast approach to detect flaky tests. 
+% Cheap, because we want to reduce the dynamic costs of rerunning tests when trying to identify flaky ones. Automated, because we ideally want to lighten the debugging load and keep developers working on their principal activity. 
+% Finally, the approach must be fast. We don't want to add overhead to the CI, as it can become responsible for delays, especially at scale, when test suites get bigger and bigger. 
+
+\subsection{Dataset}
+In their original study, Pinto \etal 
+%first showed how elusive flaky tests were. They selected 24 projects and reran their 64k tests 100 times on their last revisions, totalling 6.4 million test executions. They ended up finding 86 flaky tests. The difficulty of identifying flaky tests, even after 100 reruns, justifies the need for a static approach. This low number of flaky tests can also be explained by the fact that the 24 projects were selected after a previous study from Bell et al. In their work, they presented a tool, DeFlaker, which monitors test coverage and marks as flaky any newly failing tests that do not execute changed code. By doing so, they identified 1,874 flaky tests after monitoring projects between revisions from 2010 and 2016. For their classification work, Pinto et al
+relied on the DeFlaker dataset, which was proposed by Bell \etal~\cite{Bell2018}. 
+This dataset includes 1,874 flaky tests identified using the DeFlaker tool on multiple revisions of 24 open-source Java projects.
+Pinto \etal selected 1,403 flaky tests from this dataset to build their set of flaky tests.
+They also randomly selected tests that were not flagged as flaky by DeFlaker to form a set of \textit{a priori} non-flaky tests. 
+%(as DeFlaker cannot label a test as being non-flaky) 
+To mitigate the problem of class imbalance, both sets had the same size. 
+
+\subsection{Prediction model}
+In order to prepare the classification inputs, Pinto \etal extracted identifiers that represent the test vocabulary and complexity. 
+This extraction takes several steps. First, they localise the file where the test is defined. Then, they select all identifiers contained in this test, pre-process them by splitting them according to their camel-case syntax and converting them in lower-case. Finally, they remove stop words from the obtained set. Each flaky and non-flaky test is represented as follows:
+\begin{itemize}
+    \item A vector of booleans indicating for each token if it is present in the test or not;
+    \item The number of lines of code;
+    \item The number of Java keywords contained in the test.
+\end{itemize}  
+The last two features are used as a proxy for code complexity.
+The authors used these vectors as inputs for their prediction models.
+In particular, they evaluated the performance of five machine learning classifiers: Random Forest, Decision Tree, Naive Bayes, Support Vector Machine, and Nearest Neighbour. 
+\subsection{Evaluation}
+\subsubsection{Evaluation methodology}
+The authors follow a standard methodology to train and evaluate the five classifiers. That is, they split the whole set of test cases into a training set containing 80\% of the tests and a validation (``test'') set containing the remaining 20\%.
+
+
+\begin{table*}[t]
+\vspace{1.0em}
+\centering
+    \caption{Model performance of the Pinto \etal study~\cite{Pinto2020}}
+\label{table:resultsPinto}
+\begin{tabular}{l l|r r r r r r} 
+ \hline
+  & \textbf{Algorithm ~~~~~~~~~~~~} & \textbf{~~~~~~ Precision} & \textbf{~~~~~~ Recall} & \textbf{~~~~~~ F1} & \textbf{~~~~~~ MCC} & \textbf{~~~~~~ AUC} & \\ %[0.25ex]
+ \hline
+  & Random Forest & \textbf{0.99} & 0.91 & \textbf{0.95} & \textbf{0.90} & \textbf{0.98}  &  \\
+  & Decision Tree & 0.89 & 0.88 & 0.89 & 0.77 & 0.91  &  \\
+  & Naive Bayes & 0.93 & 0.80 & 0.86 & 0.74 & 0.93  &  \\ 
+  & Support Vector & 0.93 & \textbf{0.92} & 0.93 & 0.85 & 0.93  &  \\
+  & Nearest Neighbour & 0.97 & 0.88 & 0.92 & 0.85 & 0.93  &  \\
+ \hline
+\end{tabular}
+\vspace{1.0em}
+\end{table*}
+
+They report the standard precision, recall and F1-score metrics. The precision shows the proportion of correctly classified flaky tests. The recall shows the proportion of flaky tests found out of all existing ones. 
+They focus their analysis on the F1-score, which combines precision and recall to assess the model performance. Detailed results for their different models are listed in Table ~\ref{table:resultsPinto}.
+
+\subsubsection{Results}
+Among the five trained models, the most promising one was Random Forest, having a performance as high as 0.95 for the F1-score. Altogether, the five models showed great performance on their dataset.  

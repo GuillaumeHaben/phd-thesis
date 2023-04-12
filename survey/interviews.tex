@@ -1,0 +1,150 @@
+\section{Interviews and Analysis}
+\label{sec:survey-interviews}
+
+% Our initial goal is to explore with an open-minded the following topics:
+% \begin{itemize}
+%     \item The sources of flaky tests;
+%     \item The strategies for mitigating flaky tests;
+%     \item The automation needs for flakiness mitigation; 
+% \end{itemize}
+The objective of the interviewing process is to explore the topics of our research questions with an open mind instead of testing pre-designed questions.
+For this purpose, we pursue a qualitative research approach~\cite{creswell2017research} based on classic Grounded Theory concepts~\cite{adolph2011using}. 
+In this section, we explain our implementation of this approach from the interview design to the analysis of the results.
+\subsection{Questions}
+Since we already formulated our topics of interest (RQs), we opted for semi-structured interviews.
+These interviews build on starter questions, which cover the topics of interest, and according to the interviewee's answers, they develop follow-up questions that explore other points.
+While designing and conducting our interviews, we followed the recommendations of Hove~\etal~\cite{hove2005experiences}.
+In particular, we ensured the clarity of the discussed topics and notions before going through the interviews.
+For instance, we always asked questions about the interviewee's definition of flakiness to avoid misunderstandings and ensure that the following questions are interpreted correctly.
+We also avoided making prior assumptions about participants' opinions or actions.
+For example, we ask several questions about the testing practices before formulating our questions to avoid wrong assumptions about the use of automated testing or CI. 
+We also explained the non-judgemental nature of the interviews and encouraged participants to express their opinions freely.
+Specifically, we mentioned that the objective is not to assess the participants' knowledge about flakiness but rather to grasp their perception of it.
+Finally, we asked follow-up questions whenever possible and we favoured open-questions such as \textit{``Why did you opt for this measure?''} to incite participants to explain their motivations.
+We structured our interview around the three following sections.
+\paragraph{\textbf{Context}}
+We asked questions to characterise the project and testing infrastructure.
+\begin{enumerate}[leftmargin=*,noitemsep,topsep=0pt]
+    \item What kind of projects do you work on? If possible ask for metrics like codebase size, architecture, and development team size.
+    \item Do you have automated or manual tests?
+    \item What kind of tests do you generally write?
+    \item Do you have a continuous integration?
+    \item Do you have a testing policy?
+    \item Can you describe your testing infrastructure? Do you consider it stable?
+\end{enumerate}
+
+\paragraph{\textbf{Flakiness}}
+We asked general questions about flakiness:
+\begin{enumerate}[leftmargin=*,noitemsep,topsep=0pt] \setcounter{enumi}{6}
+    \item Do you know what a flaky test is? 
+    \item What is your definition of flakiness?
+    \item How commonly do you encounter flaky tests?
+    \item What are the sources of flakiness in your context? 
+    \item Do you consider flakiness as an issue? Why?
+\end{enumerate}
+
+\paragraph{\textbf{Measures}}
+We asked questions about the actions taken by participants to prevent and address flaky tests:
+\begin{enumerate}[leftmargin=*,noitemsep,topsep=0pt] \setcounter{enumi}{11}
+    \item How do flaky tests manifest in your codebase? How do you detect them?
+    \item How do you treat the identified flaky tests?
+    \item Do you adopt any specific measures to avoid flaky tests?
+    \item Why did you adopt these measures?
+    \item Do you face difficulties when dealing with flaky tests? 
+    \item If yes: What are these difficulties and what could help you to overcome them?
+\end{enumerate}
+For each measure described by the participant, we asked follow-up questions to understand the motivations and consequences.
+When possible, we also asked follow-up questions about the measures that the participants did not take, \eg if they never mention fixing flaky tests, we could ask about the rationale behind it.
+%More specifically, when developers do not mention some measures that we observed in the grey literature (\eg fixing or reruns), we could ask questions why these measures were not adopted.
+All the interviews were performed with online calls where we explicitly asked the participants for recording permission. 
+The recordings lasted from 26 to 63 minutes with an average duration of 41 minutes.
+\subsubsection{Participants}
+Our objective was to select practitioners who have experience in dealing with flaky tests in diverse contexts.
+This diversity enriches the study and allows us to have a thorough understanding of the practitioner perspective.
+To ensure this diversity, we relied on several channels to invite potential participants.
+
+%\paragraph{Contact \& Selection}
+We shared our invitation with a brief description of the study objectives on online groups for software engineering practitioners.
+For instance, we targeted a group that gathers 265 practitioners that are interested in software testing and continuous integration.
+The group members are from large companies like Tesla, Google, Apple, VMWare, Netflix, Facebook, Spotify, etc.
+To include participants from other backgrounds, we also targeted groups of practitioners from FinTech companies, average-sized IT companies, and local startups.
+%We did not exclude practitioners based on their company size nor their positions.
+Following these invitations, we received answers from 19 practitioners who showed an interest in our study.
+After exchanges, five participants estimated that their experience is insufficient for the study and did not proceed with the interviews, thus our process ended up with 14 participants.
+This number of interviewees is typical in studies that approach similar topics~\cite{tomasdottir2017and,8999994}.
+Besides, due to the specificity of the topic, it is very challenging to find other developers that are qualified enough to take part in the study.
+We conducted the interviews with the 14 participants and after the analysis, we considered that the collected data is enough to answer our research questions and provide us with theoretical saturation~\cite{glaser2007remodeling}.
+Indeed, the three last interviews did not lead to any changes in our analytical template and only provided new formulations for existing categories.
+
+Table~\ref{tab:participants} summarises the profile of our participants (role and years of experience) and their current companies (number of employees, domain, and number of users).
+To preserve the anonymity of our participants, we refer to them with code names, we omit their company names, and upon specific request, we also omit the experience and domain.
+Our participants have solid experience in software engineering, their experience ranges from 6 to 35 years, with an average of 16 years.
+%This strong experience allows us to 
+The participants also work in companies that vary significantly in terms of size and domain of activity.
+On top of the industrial experience, three of our participants contributed regularly to Open Source Software (OSS) as part of their job or as a side activity.
+%We believe that this diversity ...
+
+
+\begin{table}
+\vspace{-0.5em}
+\centering
+\caption{A summary of participants' profiles.}
+\vspace{-1.0em}
+\label{tab:participants}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{ccccccc} 
+ \cline{2-7}
+  & \textbf{\textit{Role}} & \textbf{\textit{
+Years}} & \textbf{\textit{Size}} & \textbf{\textit{Domain}} & \textbf{\textit{Users}} & \textbf{\textit{OSS}}  \\  \hline
+ P1 & Engineering Manager  & 24 & +1K  & Music & +200M & No \\ \hline
+ P2 & CTO & 10 & +10 & Mobility  & - & No \\ \hline
+ P3 & Tech Lead & 7 & +200 & Cloud & +30K & Yes \\ \hline
+ P4 & QA Consultant & 12 & +2K & FinTech & +190K & No \\ \hline
+ P5 & CTO & 14 & +10 & Infrastructure & - & No \\ \hline
+ P6 & Staff Engineer & 20  & +1K & DevOPs & - & Yes \\ \hline
+ P7 & Vice President & 17 & +200 & Cloud & +30K & Yes \\ \hline
+ P8 & Architect & 7 & +5k & Online sales & +70M & No \\ \hline
+ P9 & Senior Researcher & 35 & +20 & R\&D & - & No\\ \hline
+ P10 & Architect & 30 & +24K & Virtualisation & +500K & No \\ \hline 
+ P11 & Senior Engineer & 6 & +10k & - & +500M & No \\ \hline
+ P12 & Principal Architect & 23 & +10k & Payment & +200M & No \\ \hline
+ P13 & Front-end Developer & 7 & +40 & Banking & - & No \\ \hline
+ P14 & Senior Engineer & - & +10k & - & +500M & No \\ \hline
+\end{tabular}
+}
+\end{table}
+\subsection{Analysis}
+As our study builds on semi-structured interviews, we relied on the strategy proposed by Schmidt \etal~\cite{schmidt2004analysis}.
+This strategy helps with inquiries where a prior understanding of the problem is postulated but the analysis remains open for exploring new topics and formulations.
+In the following, we explain the four steps of this analysis.
+\paragraph{Transcription}
+To prepare the interview analysis, we transcribed the recorded interviews into texts following a denaturalism approach.
+This approach allows us to dismiss non-informational content and ensures a full and faithful transcription~\cite{oliver2005constraints}.
+For the cases where the interviews were not conducted in English, we transcribed them in the original language and we only proceeded to their translation at the reporting step.
+
+\paragraph{Definition of analytical categories}
+The goal of this step is to define the analytical categories that guide our analysis.
+In our case the initial categories of interest were (i) \textit{the sources of flaky tests}, (ii) \textit{the measures for mitigating flaky tests}, and (iii) \textit{the difficulties of dealing with flaky tests}.
+After conducting four interviews, we observed that an additional topic that is commonly mentioned by developers is: (iv) \textit{the impact of flakiness}.
+Based on our preliminary discussions, this topic provided new insights on the effects of flaky tests, as seen by practitioners.
+This topic also seemed essential for understanding the efforts dedicated to the mitigation of flaky tests.
+Hence, we added this topic to our categories of interest and our interview template.
+After setting the analytical categories, we read each participant answer to identify the categories that can be associated with it.
+In this process, we do not only focus on the participants' direct answers, but we also consider their use of terms and the aspects that they omit.
+For instance, in our analysis of the second analytical category, we consider the measures taken by practitioners but also those that they were not aware of or the ones that they discarded.
+On top of that, we carefully analyse developers' answers to context and flakiness questions to spot elements that can help in interpreting their answers.
+
+\paragraph{Assembly of a coding guide}
+The objective of this step is to build a guide that can be used to code the interviews.
+We assembled the four analytical categories and identified different sub-categories for them based on an initial reading of the interviews.
+The sub-categories represent different versions formulated by developers in one  analytical category.
+For instance, for the first analytical category, \ie sources of flaky tests, the initial sub-categories were \textsf{Test}, \textsf{Code Under Test}, and \textsf{Environment}.
+These sub-categories are not final and can be refined, omitted, or merged along the following step.
+For example, the sub-category \textsf{Environment} is later refined to two categories \textsf{Infrastructure} and \textsf{Uncontrollable environment}.
+
+\paragraph{Coding}
+We read the interviews to identify passages that can be related to the categories and sub-categories of our coding guide.
+This process can be repetitive as every time a new sub-category is identified or refined, we need to read previous texts to ensure that all passages related to it are identified.
+To ensure the soundness of this process, two authors coded the interviews separately before comparing their results.
+In case of disagreement, the authors discussed their views and opted for a negotiated solution.
+Besides this consensual coding, all the authors discussed the coding guide iteratively, to ensure the clarity and precision of the identified sub-categories.
