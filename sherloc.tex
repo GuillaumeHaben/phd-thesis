@@ -1,8 +1,16 @@
-\chapter{What Made This Test Flake? Pinpointing Classes Responsible for Test Flakiness}
+\chapter{Pinpointing Classes Responsible for Test Flakiness}
 \label{chap:sherloc}
 
-\chapterPage{
+\setcounter{minitocdepth}{1}
+\justifying
+\textit{Still with the goal of helping to debug flakiness, we present in this chapter a new approach to locate the source of flakiness when it originates from the code under test. This represents a specific but critical case as the cause of non-determinism lies in the program itself. The approach leverages Spectrum-Based Fault Localisation techniques, code and change metrics and ensemble learning to rank classes the most likely to be responsible for flakiness.\\
 }
+
+\chapterPage{This chapter is based on the work published in the following paper:\\
+\begin{itemize}
+\vspace{-2mm}
+\item \fullcite{habchiPinpointing}
+\end{itemize}}
 
 \input{sherloc/introduction}
 \input{sherloc/data}

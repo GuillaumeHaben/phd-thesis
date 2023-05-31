@@ -4,13 +4,14 @@
 In this section, we discuss our results in light of the existing literature on test flakiness and fault localisation.
 Our approach uses existing fault localisation techniques to identify flaky classes in the CUT.
 While we leverage various data sources, the main strength of our approach comes from adopting existing SBFL techniques, as explained in RQ2. The effectiveness of other data, such as change metrics, is limited in providing additional signals that break ties between the classes already ranked near the top. Hence, the performance of our approach largely depends on the applicability of SBFL to our flaky class identification problem.  
-%Although our flaky class identification study and previous work on fault localisation share many things in common~\cite{xx}, there is one significant difference between them: the characteristics of a test-suite. 
+
+
 The flaky class identification problem and traditional fault localisation problems are similar in the way they are debugged (\ie from the reproduction and cause identification to the fix). As described in~\ref{sub:rq1_effectiveness}, this resemblance allows us to redefine SBFL techniques to identify flaky classes instead of faulty ones. Nevertheless, there is one significant difference between them: the characteristics of a test suite. 
-%Many fault localisation studies assume unit testing, \ie testing a single functionality at a time~\cite{Lou:2021:fse,Li:2019:issta,Wen:2019:tse}. 
-Many fault localisation studies assume a test to cover a single functionality, and the subjects they studied often follow this assumption~\cite{Lou:2021:fse,Li:2019:issta,Wen:2019:tse}.
+
+Many fault localisation studies assume a test to cover a single functionality, and the subjects they studied often follow this assumption~\cite{Lou:2021:fse,DeepFL,Wen:2019:tse}.
 In contrast, we did not consider such an assumption for test subject selection to reflect a realistic scenario of flaky test failure. 
 This difference may restrict the applicability of existing fault localisation techniques to the flaky class identification problem, especially test coverage-based techniques, such as SBFL.
-Indeed, although we identified 26\% and 61\% of flaky classes at the top and within the top 10, we failed to reach the performance reported in prior work on fault localisation~\cite{Wong:2016:tse}. Hence, we investigate %the quality of the test suite of our subjects using the Density, Diversity, and Uniqueness (DDU) metric~\cite{perez:2017:icse}. 
+Indeed, although we identified 26\% and 61\% of flaky classes at the top and within the top 10, we failed to reach the performance reported in prior work on fault localisation~\cite{wong2016survey}. Hence, we investigate
 the diagnosability of the test suite of our subjects using the Density, Diversity, and Uniqueness (DDU) metric~\cite{perez:2017:icse}. 
 
 DDU diagnoses the adequacy of SBFL for a software system by considering three properties of its test suite: Density, Diversity, and Uniqueness. Each property covers a distinct feature of a test suite, and DDU is computed as the multiplication of these three properties. 
@@ -19,19 +20,14 @@ All these three components of DDU have values between 0 and 1. The higher the DD
 
 Table~\ref{tab:DDU} presents DDU values for the five projects analysed in this study. While all five projects generally have high diversity values (\ie all above 0.9), they have relatively low uniqueness and density values, which results in low DDU scores. Among the five projects, Pulsar has the highest DDU score of 0.289, followed by Neo4j, Alluxio, Ignite, and Hbase. Since both Neo4j and Alluxio have only three flaky classes, which might be too small to discuss the identification results, we will skip these two for the following discussion.
 Among the remaining three projects, all our flaky class identification methods, ranging from pure SBFL to voting, perform the best on Pulsar, the one with the highest DDU score, in \textit{acc@n} and \textit{wef}. For instance, even the pure SBFL approach that often performs the worst successfully localised nine out of ten flaky classes of Pulsar within the top 10 and more than half within the top five. The same trend was observed in both GP and voting-based methods.
-%On the contrary, for Ignite, which has the second-lowest DDU score of 0.132, none of the SBFL \formulas succeeded to identify flaky classes at the top and only four in the top ten. Although the performance improves slightly with GP and voting-based methods, the overall performance remains low. % despite Ignite having the largest number of flaky classes (14). 
-%Hbase has the lowest average DDU score, but it has a slightly higher DUU score (0.098) than Ignite (0.087) at the median.
-%In terms of Uniqueness, Hbase has a better average of 0.413 than 0.188 of Ignite; it also has a better median for Uniqueness than Ignite, having 0.461, whereas Ignite has 0.137. Considering that Uniqueness ensures a code entity to be distinguishable, we suspect that Ignite having a far smaller Uniqueness value might be the reason why our approach performed the worst on it. 
-% updated
 Compared to HBase, while Ignite has a slightly higher average for the DDU score, it has a far lower Uniqueness score (\ie 0.188 for Ignite and 0.413 for HBase). Uniqueness evaluates whether a code entity is distinguishable; we assume that the flaky classes have different coverage than non-flaky classes. Thus, we suspect that Ignite having a lower Uniqueness is why our methods were not as effective on Ignite as on HBase: we have the worst results on Ignite in both absolute (\ie \textit{acc@n} and \textit{wef}) and relative effort (\ie $R_{wef}$). 
 
-Based on these results, we argue that while our outcome may not be as good as those reported by prior fault localisation studies\cite{Yoo:2017ss,sohn-TSE}, that is mainly due to the inherently low diagnosability of a test suite (\eg covering too many classes in the same fashion). This test-suite adequacy issue commonly exists in the fault localisation field\cite{Sohn2021ea} and is not limited to flaky class identification. Hence, we posit that the performance of our approach can improve along with the advances in fault localisation techniques. 
+Based on these results, we argue that while our outcome may not be as good as those reported by prior fault localisation studies\cite{Yoo:2017ss,sohn-TSE}, that is mainly due to the inherently low diagnosability of a test suite (\eg covering too many classes in the same fashion). This test-suite adequacy issue commonly exists in the fault localisation field\cite{sohn2021assisting} and is not limited to flaky class identification. Hence, we posit that the performance of our approach can improve along with the advances in fault localisation techniques. 
 
 \begin{table*}[ht]
 \caption{DDU metrics for the analysed test suites. \label{tab:DDU}}
 \centering
-%\resizebox{\columnwidth}{!}{
-\scalebox{0.9}{
+\resizebox{\textwidth}{!}{
 \begin{tabular}{l|ccc|ccc|ccc|ccc}
 \toprule
 \textbf{Project} & \multicolumn{3}{c|}{\textbf{Density}} & \multicolumn{3}{c|}{\textbf{Diversity}} & \multicolumn{3}{c|}{\textbf{Uniqueness}} & \multicolumn{3}{c}{\textbf{DDU}}\\
@@ -43,15 +39,11 @@ Ignite & 0.368 & 0.993 & 0.736 & 0.918 & 1.000 & 0.979 & 0.045 & 0.486 & 0.188 &
 Pulsar & 0.029 & 0.998 & 0.491 & 0.984 & 0.998 & 0.994 & 0.520 & 0.786 & 0.609  & 0.019 & 0.518 & 0.289\\
 Alluxio & 0.414 & 0.833 & 0.591 & 0.958 & 0.996 & 0.982 & 0.226 & 0.615 & 0.362 & 0.101 & 0.322 & 0.201  \\
 Neo4j & 0.127 & 0.739 & 0.515 & 0.894 & 0.993 & 0.931 & 0.268 & 0.791 & 0.585 & 0.088 & 0.522 & 0.258 \\
-%\midrule
-%Overall &  \\
 \bottomrule
 \end{tabular}
 }
-\vspace{-4mm}
 \end{table*}
 
-%Discuss test type
 
 In an attempt to shed light on the 15 cases where the class was ranked outside the top 10 by our voting approach, we extended our inspection to reason about such performances. We observed that flaky tests covering a high number of classes are more likely to result in low performances. 
 For example, the flaky test \texttt{shutdownDatabaseDuringIndexPopulations} in Neo4j covers 480 classes and its flaky class was ranked 59 by our voting approach whereas the other flaky tests in Neo4j (having their corresponding flaky classes ranked 1 and 2) cover fewer than 10 classes. When we inspect the DDU score of the specific commit that contains this test, it has a relatively low DDU score compared to the other two commits. 

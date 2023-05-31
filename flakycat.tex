@@ -1,9 +1,17 @@
-\chapter{FlakyCat: Predicting Flaky Tests Categories using Few-Shot Learning}
+\chapter{Predicting Flaky Tests Categories using Few-Shot Learning}
 \label{chap:flakycat}
 
-\chapterPage{
+\setcounter{minitocdepth}{1}
+\justifying
+\textit{
+The last two chapters explored the challenges linked with test flakiness and in particular flaky test prediction. We identified the need for both researchers and developers to better understand the root cause of a flaky test once detected. Thus, we present in this chapter FlakyCat, the first approach to classify flaky tests based on their category of flakiness. This technique, based on CodeBERT for source code representation, leverages few-shot learning and Siamese networks to learn from a limited set of examples. To enable a better comprehension of the predictions, we also introduce an interpretability technique for CodeBERT-based models.\\
 }
 
+\chapterPage{This chapter is based on the work published in the following paper:\\
+\begin{itemize}
+\vspace{-2mm}
+\item \fullcite{akliflakycat}
+\end{itemize}}
 
 \input{flakycat/introduction}
 \input{flakycat/flakycat}

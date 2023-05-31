@@ -1,18 +1,17 @@
 \section{Threats to Validity}
 \label{sec:chromium-threats}
 
-
-\subsection{Internal validity}
+\subsection{Internal Validity}
 The main threat to the internal validity of our study lies in the use of vocabulary-based approaches as predictors of flaky tests and failures. Approaches leveraging other features, \ie dynamic, static, or both, could perform differently. As explained in section ~\ref{sec:evaluationSelection}, many features are difficult to extract in the case of Chromium (\eg test smells or test dependency graphs) and features relying on code coverage are not considered due to the overheads they introduce and the difficulty of instrumenting the entire codebase. Although this limits our feature set, the same situation appears in many major companies such as Google and Facebook. Nevertheless, our key insight is that many regression faults are discovered by flaky tests, meaning that they would have been missed even by any flaky test detector that correctly considers them as flaky. 
 
 As seen in previous sections, most of the research on flakiness prediction focuses on classifying tests. Although in this paper we highlight the need for ---and focus on--- detecting failures, one may wonder what would be the performance of the studied techniques when aiming at detecting flaky tests (instead of flaky test failures). To this end, we trained a model using our dataset to distinguish flaky from non-flaky tests and found similar results with those reported by the literature, i.e., MCC 0.77 when shuffling data and MCC 0.52 when performing a time-sensitive evaluation. The above result shows that the problem of targeting flaky tests is easier and more predictable. However, as shown by our analysis it is misleading as more than 2/3 of the regression faults are missed by such methods. 
 
-\subsection{External validity}
+\subsection{External Validity}
 We show that detecting flaky tests (instead of failures) is harmful as it can miss many regression faults. This is the case for the Chromium project and, while we believe Chromium to be representative of other software systems, we cannot guarantee that findings would generalise to other projects. Similarly, the performance of the different models we report may vary depending on the project. Here, we mainly focus on web/GUI tests and flakiness might have different causes in HTML and Javascript testing compared to other programming languages. 
 
 Nevertheless, we believe that flaky tests are useful since developers tend to keep them instead of discarding them. Therefore, flaky test signals should not always be considered as false. 
 
-\subsection{Construct validity}
+\subsection{Construct Validity}
 We assume that all fault-revealing tests in our dataset indeed reveal one or several issues in the code. This is the information reported by the Chromium CI as of today. It is possible that some fault-revealing tests are actually flaky tests as they might not be executed in a sufficient amount of time. However, reruns cannot guarantee that a test is not flaky. As this information is currently used by Chromium's developers and further verification is non-trivial, we rely on it as ground truth for our dataset. Passing tests used as non-flaky tests could also be mislabeled in our dataset. Though, there is a consequent number of passing tests and it is unlikely that many would actually be flaky. Furthermore, to strengthen our confidence in our set of non-flaky tests, we remove from the set of passing tests any tests that were found to be either flaky or fault-revealing in any of the 10,000 builds.
 
-Additionally, it is possible that more than one regression fault is present in the case of several fault-revealing tests that fail in one build. Although this could alter the results we report in RQ1, it would actually strengthen our key message as even more faults could have been missed. %if only reported by flaky tests.
+Additionally, it is possible that more than one regression fault is present in the case of several fault-revealing tests that fail in one build. Although this could alter the results we report in RQ1, it would actually strengthen our key message as even more faults could have been missed.

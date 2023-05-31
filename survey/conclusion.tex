@@ -1,25 +1,23 @@
 \section{Conclusion}
 \label{sec:survey-conclusion}
 
-%We presented an analysis of flaky tests and their mitigation strategies through a qualitative analysis of 14 practitioner interviews and a grey literature review.
-%We performed a qualitative analysis of 14 practitioner interviews and a grey literature review to identify the sources, impacts, mitigation measures, and challenges of test flakiness in practice.
 Our study shows that the analysis of flaky tests must consider the whole testing ecosystem and it should not be limited to the test and code under test.
 We also highlight a broader impact of flakiness on the testing practices and the overall system quality than what had been presented by previous work. 
 Finally, we synthesise 16 measures adopted by practitioners to mitigate flakiness and we identify automation opportunities within them. 
 These results open an avenue for future work:
 
-\begin{itemize}[wide=10pt,noitemsep,topsep=0pt]
+\begin{itemize}
     \item Flakiness stems mainly from the interactions between system components, the testing infrastructure, and uncontrollable external factors. 
     Future studies can leverage monitoring and log analysis to propose techniques that assist practitioners in addressing flakiness.
     
-    \item The establishment of simple testing guidelines, \eg recommendations on test size, external resources, and assertion thresholds, is a key measure for preventing flaky tests.
+    \item Establishing testing guidelines, \eg recommendations on test size, external resources, and assertion thresholds, is a key measure for preventing flaky tests.
     Future studies can decrease the manual effort expended in enforcing such guidelines by providing static analysis tools and code review processes.
     
     \item Future work can leverage variability-aware reruns \cite{WongMLK18} and fuzzy testing to effectively expose and reproduce flaky tests.
     Such techniques can help in automating the current manual test validations performed by practitioners.
     
     \item Given the frequency of flaky tests and the cost of their mitigation, practitioners rely on the flake rate to adapt their strategies.
-    Future work should account for this indicator when assessing flaky tests and leverage it in their automated solutions.
+    Future work should account for this when assessing flaky tests and leverage it in their automated solutions.
     
     
     \item Some practitioners may falsely label buggy and non-deterministic features as flaky tests, and thus ignore them and treat them as false alerts.
@@ -27,5 +25,4 @@ These results open an avenue for future work:
     
     \item Due to the difficulty of reproducing and debugging flaky tests, the fixing step is rarely achieved by practitioners. 
     Future work should focus on providing tools that assist the root cause identification and reproduction of flaky tests.
-    
 \end{itemize}

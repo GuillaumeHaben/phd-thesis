@@ -1,9 +1,16 @@
-\chapter{The Importance of Discerning Flaky from Fault-triggering Test Failures: A Case Study on the Chromium CI}
+\chapter{The Importance of Discerning Flaky from Fault-triggering Test Failures}
 \label{chap:chromium}
 
-\chapterPage{
+\setcounter{minitocdepth}{1}
+\justifying
+\textit{While promising, the actual utility of the methods predicting flaky tests remains unclear since they have not been evaluated within a continuous integration (CI) process. In particular, it remains unclear what is the impact of missed faults, \ie the consideration of fault-triggering test failures as flaky, at different CI cycles. In this chapter, we apply state-of-the-art flakiness prediction methods at the Chromium CI and check their performance. Perhaps surprisingly, we find that the application of such methods leads to numerous faults missed, which is approximately \nicefrac{3}{4} of all regression faults. To explain this result, we analyse the fault-triggering failures and find that flaky tests have a strong fault-revealing capability. Overall, our findings suggest that future research should focus on predicting flaky test failures instead of flaky tests (to reduce missed faults) and reveal the need for adopting more thorough experimental methodologies when evaluating flakiness prediction methods (to better reflect the actual practice).\\
 }
 
+\chapterPage{This chapter is based on the work in the following paper:\\
+\begin{itemize} 
+\vspace{-2mm}
+\item \fullcite{haben2023importance}
+\end{itemize}}
 
 \input{chromium/introduction}
 \input{chromium/chromium}

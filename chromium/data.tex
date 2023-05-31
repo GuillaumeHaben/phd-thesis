@@ -3,20 +3,17 @@
 
 \subsection{Definitions}
 
-%In this paper, we discuss many different entities at different levels: builds, tests, failures... 
 Some of our definitions are slightly different from the ones used by previous work since Chromium has its specific continuous integration setup. To make things clear, we define the elements we will discuss in this section.  
 In the scope of \emph{a single build}, we employ the following definitions: 
 \begin{itemize}
-  %  \item \textbf{Regression}: A software fault caused by a change in the code.
     \item \textbf{Fault-revealing test}: A test that consistently failed after reruns in the same build, revealing a regression fault.
     \item \textbf{Flaky test}: A test that failed once or more and then passed after reruns in the same build. 
-    % \item\textbf{Fault-revealing flaky test}: A fault-revealing test that was found to be flaky in at least one other build.\footnote{Note that in a given build, a fault-revealing flaky test always fail and cannot be labelled as a flaky test within the same build.} 
     \item\textbf{Flaky failure}: A test failure caused by a flaky test.
     \item\textbf{Fault-triggering failure}: A test failure caused by a fault-revealing test.\\
 \end{itemize}
 
 
-\subsection{Data collection}
+\subsection{Data Collection}
 
 To perform our study, we collected test execution data from 10,000 consecutive builds completed by the Linux Tester by querying the LuCI API. This represents a period of time of about 9 months taken between March 2022 and December 2022. 
 
@@ -24,14 +21,9 @@ Table ~\ref{table:infoRuns} summarises the list of information extracted and com
 
 All the scripts used to collect the data alongside the created dataset are available in our replication package.
 
-
-% Table: Description of the features
-% Taken from the README
-\begin{table}[ht]
-%\vspace{1.0em}
+\begin{table}[!ht]
 \centering
 \caption{Description of our features. Column \textit{Feature Name} specifies the identifiers used in our dataset, while Column \textit{Feature Description} details the features}
-%\vspace{-1em}
 \label{table:infoRuns}
 \begin{tabular}{ l | l } 
 \toprule
@@ -57,28 +49,25 @@ testSuite & The test suite the test belongs to \\
 testId & The test name \\
 \bottomrule
 \end{tabular}
-\vspace{1.0em}
 \end{table}
 
 % Table: Data collected from the Chromium CI
 % Script: infoDataset.py
 \begin{table*}[ht]
-%\vspace{1.0em}
 \centering
 \caption{Data collected from the Chromium CI. We used the \textit{Linux Tests} tester, with \textit{10,000} Builds mined over \textit{nine} months. We extracted Passing, Flaky and Fault-revealing tests and their associated Flaky and Fault-triggering Failures.}
-\vspace{-0.5em}
 \label{table:infoDataset}
-\begin{tabular}{ l | c | c c | c c c | c c } 
+\resizebox{\textwidth}{!}{\begin{tabular}{ l | c | c c | c c c | c c } 
 \toprule
 \multirow{2}{*}{\textbf{Tester}} & \multirow{2}{*}{\textbf{Nb of Builds}} & \multicolumn{2}{c|}{\textbf{Period of Time}} & \multicolumn{3}{c|}{\textbf{Number of Tests}} & \multicolumn{2}{c}{\textbf{Number of Failures}} \\
 {} & {} & \textbf{From} & \textbf{To} & \textbf{Passing} & \textbf{Flaky} & \textbf{Fault-revealing} & \textbf{Flaky} & \textbf{Fault-triggering} \\
 \midrule 
 Linux Tests & 10,000 & Mar 2, 2022 & Dec 1, 2022 & 198,273 & 23,374 & 2,343  & 1,833,831 & 17,171 \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table*}
 
-\subsection{Computing the flake rate}
+\subsection{Computing the Flake Rate}
 \label{sec:testHistory}
 
 The historical sequence of test results is a valuable piece of information commonly used in software testing at scale~\cite{LeongSPTM19,Kowalczyk2020}. We analyse the history of fault-revealing tests and flaky tests by relying on their \textsf{flakeRate}.
@@ -98,11 +87,9 @@ The test execution history (\aka heartbeat) has been used in multiple studies (e
 These studies assume that many flaky tests have distinguishable failure patterns over builds and hence can be detected by observing their history.
 We check whether this assumption also holds in the case of Chromium.
 
-\begin{figure}[!htbp]
-    \vspace{-1em}
+\begin{figure}[ht]
   \centering
     \includegraphics[width=0.8\textwidth]{figures/chromium/densityFlakeRate.png}
-    \vspace{-1em}
     \caption{Flake rate (\textit{x-axis}) for \textcolor{orange}{Flaky} and \textcolor{red}{Fault-revealing tests}. Density (\textit{y-axis}) is the probability density function. The area under curves integrates to one. Many flaky tests are always flaky in their previous builds. A majority of fault-revealing tests have no history of flakiness at all.}
     \label{fig:kdeRates}
 \end{figure}

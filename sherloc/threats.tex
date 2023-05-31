@@ -1,42 +1,34 @@
-\section{Threats to validity}
+\section{Threats to Validity}
 \label{sec:sherloc-threats}
 
-
-\paragraph{External validity}
+\subsection{External Validity}
 The main threat to the external validity of this study is the dataset size.
 To ensure the generalisability of our results, it would have been preferable to include more flaky tests in our experiments. 
-Nonetheless, the datasets of flaky tests are generally limited in size due to the elusiveness of flakiness~\cite{habchi2021mutinject,Haben2021,alshammari2021flakeflagger}.
-Moreover, as explained in Section~\ref{sec:data_collection}, the requirements of this study limited the set of candidates considerably.
+Nonetheless, the datasets of flaky tests are generally limited in size due to the elusiveness of flakiness~\cite{habchi2021mutinject,Haben2021,FlakeFlagger}.
+Moreover, as explained in Section~\ref{sec:sherloc-data}, the requirements of this study limited the set of candidates considerably.
 For a commit to be eligible in our study, it needs to have atomic changes fixing flakiness in the CUT.
 However, only 24\% of flaky tests actually stem from the CUT, which limits the size of potential subjects~\cite{Luo2014}.
 Besides, the creation of our dataset required a substantial amount of manual work to identify suitable commits and perform necessary changes to retrieve coverage matrices.
 For instance, for each commit, we had to modify the build script to match \textsc{Gzoltar} requirements, \ie find the test executor version that matches both the program under test and the plugin.
 We iteratively removed non-essential listeners and other plugins that could interfere with the instrumentation.
 Moreover, we had to find and adapt the execution environment to match the program under test and the testing environment.
-%Thus, collecting our dataset, manually analysing the commits, and retrieving the coverage matrices consumed over three person months. 
-Finally, compared to the works of Lam~\etal~\cite{Lam2019RootCausing} and Zitfci and Cavalcanti~\cite{De-Flake}, which were conducted on proprietary software, this study is the first to leverage open-source software to localise flakiness root causes.
+Finally, compared to the works of Lam~\etal~\cite{Lam2019RootCausing} and Zitfci and Cavalcanti~\cite{ziftci2020flake}, which were conducted on proprietary software, this study is the first to leverage open-source software to localise flakiness root causes.
 Thus, our dataset and ground truth can be valuable for future studies on flakiness debugging.
 
-
-%Other categories
-
-\paragraph{Internal validity}
+\subsection{Internal Validity}
 One potential threat to our internal validity is our definition of flakiness root causes within the CUT, \ie flaky classes.
 We rely on flakiness-fixing commits to identify classes that are responsible for flakiness.
-%We consider this choice to be the most reasonable provided that no other ground truths exist in the literature.
 However, we cannot be certain that (i) the flakiness fix is effective, and (ii) the modified class is the one responsible for flakiness.
 Indeed, a study by Lam~\etal~\cite{Lam2020a} showed that developers may wrongly claim that their commits fix flaky tests before realising that the fix is ineffective.
 Additionally, there are no guarantees that the classes included in the fix are the ones responsible for flakiness.
 Nonetheless, if the class was part of the proclaimed fix, this means that the developers found it, at least, relevant. Hence, its identification by our approach is still helpful for developers willing to understand, debug, and fix flaky tests.
 
-\paragraph{Construct validity} 
-%Ground truth: Culprit classes are not accurate
+\subsection{Construct Validity} 
 One potential threat to our construct validity is our measurement of the coverage for flaky tests.
-A flaky test can pass and fail for the same version of the program, but in practice, it may be extremely difficult to reproduce both the pass and failure~\cite{alshammari2021flakeflagger,Lam2020}.
-Hence, a test can be observed as flaky by the project developers and therefore fixed, yet we are unable to reproduce the pass and failure in our experiments even with a large number of reruns~\cite{alshammari2021flakeflagger}.
+A flaky test can pass and fail for the same version of the program, but in practice, it may be extremely difficult to reproduce both the pass and failure~\cite{FlakeFlagger,Lam2020}.
+Hence, a test can be observed as flaky by the project developers and therefore fixed, yet we are unable to reproduce the pass and failure in our experiments even with a large number of reruns~\cite{FlakeFlagger}.
 For this reason, we focused on the available status, \ie pass or failure, and retrieve its coverage.
 It is possible that including the coverage of both the pass and failure from the flaky tests might lead to different results with spectrum-based fault localisation.
 Thus, we encourage future studies to investigate this direction.
-Another possible threat is whether the evaluation results of our approach truly support what we claim. %We use two evaluation metrics, $acc@n$ and $wef$, that can reflect the realistic debugging effort of developers, following the suggestion from Parnin and Orso~\cite{parnin}.
+Another possible threat is whether the evaluation results of our approach truly support what we claim. 
 We use two absolute metrics, $acc@n$ and $wef$, that can reflect the realistic debugging effort of developers, following the suggestion from Parnin and Orso~\cite{parnin}, and one relative metric, $R_{wef}$, to compare with the baseline of inspecting classes covered by flaky tests. 
-%to show that our approach can give additional guidance to currently available information, such as the list of classes covered by flaky tests. 

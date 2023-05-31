@@ -1,20 +1,9 @@
 \section{Conclusion}
 \label{sec:sherloc-conclusion}
 
-
-%Root causing flaky tests is a young nonetheless important research area. Surveys showed how difficult flakiness debugging can be for developers, even when knowing which test is flaky (post-detection)~\cite{Eck2019,habchi2021qualitative}. 
-%We leveraged our results to elaborate a few recommendations for future works:
+Root-causing flaky tests is a young nonetheless important research area. Surveys showed how difficult flakiness debugging can be for developers, even when knowing which test is flaky (post-detection)~\cite{Eck2019,Habchi2022Qualitative}. 
+We leveraged our results to elaborate on a few recommendations for future works.
 We presented the first empirical evaluation of SBFL as a potential approach for identifying flaky classes. We investigated three approaches: pure SBFL, SBFL augmented with change and code metrics, and an ensemble of them. 
 We evaluated these approaches on five open-source Java projects. Our results show that SBFL-based approaches can identify flaky classes relatively well, especially with code and change metrics, suggesting that code components responsible for flakiness exhibit similar properties with faults. This finding highlights the potential of existing fault localisation techniques for flakiness identification. At the same time, the results show that flaky tests can have unique failure causes that may mislead any coverage-based root cause analysis, stressing the need to consider these flakiness-specific causes in future studies.
-%In summary our conclusions are:
-%\begin{itemize}[wide=0pt,noitemsep,topsep=0pt]
-%     \item We showed that flakiness debugging techniques can rely on SBFL and metrics that are commonly adopted in defect prediction, to identify flaky components. This fact suggests that code components responsible for flakiness can be localised effectively as they exhibit similar properties with faults. 
-%     
-%    \item We found that some flaky tests have different failure causes, which could mislead any coverage-based root cause analysis. Future studies should account for these peculiarities while localising flaky causes. 
-%    
-%    \item Flaky tests of different categories manifest differently in the CUT and coverage-based approaches may not be adequate for all of them. This implies that researchers should take into account the different flakiness categories when devising mitigation strategies and tools.
-%    
-%    \item Metrics derived from test flakiness categories did not show an impact on the identification of flaky classes. Future studies should investigate the manifestation of flakiness in the CUT and not solely the test. This would allow the inference of metrics that better reflect flakiness in the CUT.
-%\end{itemize}
 
 Our study forms the first step towards flakiness localisation. We believe that there is a lot of room for improvement and encourage future studies to explore additional techniques, fault prediction metrics, and devise techniques that can further improve and support flakiness localisation. 

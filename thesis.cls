@@ -7,7 +7,7 @@
 \RequirePackage{diagbox}
 \RequirePackage[table]{xcolor}
 \RequirePackage{xifthen}
-\RequirePackage[maxcitenames=2, autolang=other, backref=true, style=trad-alpha, bibencoding=utf8]{biblatex}
+\RequirePackage[autolang=other, backref=true, style=ieee, bibencoding=utf8]{biblatex}
 \RequirePackage[hidelinks]{hyperref}
 \RequirePackage{indentfirst}
 \RequirePackage{doi}
@@ -127,18 +127,26 @@
 \RequirePackage[compact]{titlesec}
 \RequirePackage{anyfontsize}
 \RequirePackage[nohints]{minitoc}
+\RequirePackage[Bjornstrup]{fncychap}
 
-\titleformat{\chapter}[display]
-	{\bfseries\Large}
-	{\vspace{-3cm}\filleft\fontsize{90}{0}\fontfamily{phv}\selectfont\textcolor{gray}{\thechapter}}
-	{4ex}
-	{\titlerule
-	  \vspace{2ex}%
-	  \filright}
-	  [\vspace{2ex}%
-	  \titlerule]
+% https://tex.stackexchange.com/questions/111643/decrease-space-before-and-after-chapter-in-fncychap
+\makeatletter
+\patchcmd{\@makechapterhead}{\vspace*{50\p@}}{\vspace*{-20\p@}}{}{}
+\patchcmd{\@makeschapterhead}{\vspace*{50\p@}}{\vspace*{-20\p@}}{}{}
+\patchcmd{\DOTI}{\vskip 80\p@}{\vskip 40\p@}{}{}
+\patchcmd{\DOTIS}{\vskip 40\p@}{\vskip 0\p@}{}{}
+\makeatother
 
 
+% \titleformat{\chapter}[display]
+	% {\bfseries\Large}
+	% {\vspace{-3cm}\filleft\fontsize{90}{0}\fontfamily{phv}\selectfont\textcolor{gray}{\thechapter}}
+	% {4ex}
+	% {\titlerule
+	%   \vspace{2ex}%
+	%   \filright}
+	%   [\vspace{2ex}%
+	%   \titlerule]
 
 	  
 %%% Remove spaces for item list %%%%%
@@ -198,13 +206,12 @@
 \renewcommand{\contentsname}{Table of Contents}
 
 \newcommand{\chapterPage}[1]{
-	\setcounter{minitocdepth}{1}
-	\textit{#1}
-	\vspace*{\fill}
-	\begin{samepage}
-	\minitoc
-	\end{samepage}
-	\newpage
+	\noindent{#1}
+        \vspace*{\fill}
+        \begin{samepage}
+        \minitoc
+        \end{samepage}
+        \newpage
 }
 
 \newcommand{\highlightbox}[2][]

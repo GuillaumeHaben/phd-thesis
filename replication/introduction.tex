@@ -1,62 +1,39 @@
 \section{Introduction}
 \label{sec:replication-introduction}
 
-
 Regression testing is an important step of software development that ensures the stability of existing software features and allow multiple developers to work on a shared codebase.  
-%Regression testing is a commonly adopted strategy by practitioners. 
-In typical large scale development workflows, test suites are run after code changes to highlight any misbehaviour and validate new software releases. 
-%This assumption holds when tests are deterministic.
+In typical large-scale development workflows, test suites are run after code changes to highlight any misbehaviour and validate new software releases. 
 Unfortunately, software tests do not always give consistent results. This inconsistent behaviour is often referred to as test flakiness. Flaky tests exhibit a non-deterministic nature, \ie they pass and fail for the same version of a program and the test~\cite{Luo2014}.
 
 Flakiness plagues Continuous Integration (CI) as tests are generally expected to pass in order to merge code changes~\cite{CI}. Thus, flakiness introduces uncertainty, meaning that testers cannot be sure whether failures are true or not. 
-%A common approach to deal with flakiness is to rerun a failing test a number of times, hoping that it would pass at some point. These reruns imply costs both computation and time wise.
 Besides, flakiness affects productivity as developers invest time in reproducing and debugging flaky failures. 
 Developers may also lose trust in their test suite and stop relying on it if there are too many false signals. 
 Consequently, they could ignore failing tests that are caused by real defects in the program.
 
-Several studies and reports from industrial actors have highlighted the prevalence and impact of flakiness~\cite{Lam2019RootCausing, LeongSPTM19, Kowalczyk2020}.
-For instance, at Google, there are 150 million test executions per day, and almost 16\% of their 4.2 million test cases have some level of flakiness~\cite{Micco2017}. Perhaps worse, over 80\% of observed transitions (false Failures or Passes) at Google workflow are caused by flaky tests \cite{LeongSPTM19}, indicating an important level of uncertainty in the test signal.  
+Several studies and reports from industrial actors have highlighted the prevalence and impact of flakiness~\cite{Lam2019RootCausing, LeongSPTM19, Kowalczyk2020}.  
 
 A common approach to deal with flakiness is to rerun a failing test several times, hoping to expose non-deterministic behaviour. Unfortunately, these reruns imply cost both computationally- and time-wise. In the case of Google, this leads the company to spend between 2 and 16\% of its computer resources rerunning flaky tests~\cite{Micco2017}. Many other companies report having problems dealing with flaky tests, including Huawei~\cite{JiangHuawei}, Mozilla~\cite{Mozilla}, Facebook~\cite{Harman2018} and Spotify~\cite{FlakinessSpotify}.
 
-%\subsection{Motivation}
 To mitigate this problem, several strategies have been developed to detect flakiness. These can be divided into two main categories; the \textit{dynamic approaches} that involve running the tests and analysing their outputs and logs over time, and the \textit{static approaches} that attempt to identify flaky tests without any test execution. 
 
-Micco and Memon~\cite{GTAC2016} presented a dynamic approach that identifies flaky tests by looking for specific patterns at the test execution outcomes observed in the recent development history (Pass to Fail, Fail to Pass), thereby proposing a simple pattern matching approach that achieves a 90\% accuracy in classifying tests~\cite{GTAC2016}. A similar approach was also presented by Apple~\cite{Kowalczyk2020}, but the reality is that rerunning tests is still the main dynamic approach used to detect flakiness~\cite{FlakinessGoogle}.
+Micco and Memon~\cite{GTAC2016} presented a dynamic approach that identifies flaky tests by looking for specific patterns in the test execution outcomes observed in the recent development history (Pass to Fail, Fail to Pass), thereby proposing a simple pattern matching approach that achieves a 90\% accuracy in classifying tests~\cite{GTAC2016}. A similar approach was also presented by Apple~\cite{Kowalczyk2020}, but the reality is that rerunning tests is still the main dynamic approach used to detect flakiness~\cite{FlakinessGoogle}.
 
+Pinto \etal~\cite{Pinto2020} developed a prediction modelling approach that statically identifies flaky tests by analysing their code (test code only). This approach is appealing compared to the current practice due to its static nature that a) does not require any test execution logging and analysis that is usually hard to implement on the fly and usually not supported by the test infrastructures, and b) the low overhead it entails, i.e., it reduces the execution cost caused by test reruns. 
 
-%Recently, some studies explored static approaches for predicting flaky tests in order to reduce the costs caused by reruns in dynamic approaches.
-%King \etal~\cite{??} implemented a Bayesian Network to give a probability for a test to be flaky based on some of its characteristics. 
-%Bertolino \etal~\cite{??} presented FLAST, a static approach which can flag tests as flaky based on their level of similarity with previously identified flaky tests. 
-
-Pinto \etal~\cite{Pinto2020} developed a prediction modelling approach that statically identifies flaky tests by analysing their code (test code only). This approach is appealing compared to the current practice due to its static nature that a) does not require any test execution logging and analysis that is usually hard to implement on the fly, and usually are not supported by the test infrastructures, and b) the low overhead it entails, i.e., it reduces the execution cost caused by test reruns. 
-
-The original study (Pinto \etal) evaluated the performance of different machine learning models on different representations of the test code and found that the vocabulary of tests can predict test flakiness with 95\% of accuracy (F1 score). %Their evaluation showed that the vocabulary of tests can indeed be leveraged to predict flakiness.
+The original study (Pinto \etal) evaluated the performance of different machine learning models on different representations of the test code and found that the vocabulary of tests can predict test flakiness with 95\% of accuracy (F1 score).
 Although encouraging, the original study was performed in a dataset covering one programming language (Java), evaluated in a time-insensitive manner and left open many additional questions related to the vocabulary of source code. 
-%This means that flaky tests can be detected statically while avoiding reruns and all flakiness costs.
-%it several times can be a valuable piece of information to avoid such costs.
 Considering the importance of the problem we decided to perform further investigations. We believe that extensive and independent evaluations are also necessary to reach industrial adoption and practice. 
-%As the research works in the domain of flakiness are recent, there is still a need for more data in order to better understand the problem. The same applies for machine learning models. Existing datasets of known flaky tests are rare and small compared to datasets in other branches of software engineering research like for vulnerability prediction for example. DeFlaker and iDFlakies respectively identified and shared 1,874 and 422 flaky tests in 26 and 82 Java projects. Previously cited studies showed that learning from flaky tests to predict the status of new ones is feasible, but the generalisation of the concepts is yet to be proven. 
-
 
 Replication is essential to verify experimental results from previous studies. They are a key aspect of empirical software engineering as they bring evidence that observations made can hold (or not) under other conditions. Different types of replication exist~\cite{Shull2008,Gomez2014}. An \textit{exact} replication attempts to reproduce the experiments following as closely as possible the initial procedures. By doing so, we learn that the first results were not caused by uncontrolled random factors. In \textit{conceptual} replication, one or more dimensions can be changed to investigate to what extent the results hold. 
 
-In this paper, we present a conceptual replication of the study of Pinto \etal~\cite{Pinto2020}. % that offers an interesting solution to predicting test flakiness. In particular, we seek to understand the conditions under which the approach holds when considering other configurations and subjects. 
+In this paper, we present a conceptual replication of the study of Pinto \etal~\cite{Pinto2020}.
 We start by considering a different validation methodology than the one used in the study of Pinto \etal~\cite{Pinto2020}. We thus adopt a time-sensitive validation setting that better reflects the envisioned use case of the approach; at a given point in time, we train our predictor with historically identified flaky tests and inspect the model performance in predicting unseen flaky tests, i.e., with the subsequent ''future'' tests.  
-%there is a growing body of literature in the domain of flakiness prediction; 
 We argue that this procedure is important to confirm the results and avoid biasing the predictions by considering future data. 
 
 Another aspect our study aims to evaluate is the generalisation of Pinto \etal's findings, in particular to a different programming language. Therefore, we mine Python projects from GitHub and build a new dataset of 837 flaky tests. Then, we use it in order to evaluate the vocabulary-based flakiness prediction. This part of the analysis aims at re-validating the Pinto \etal findings on new and different data. 
 
 Finally, we go beyond the original study by considering an extended set of features. In particular, we attempt to predict flakiness using not only the vocabulary of test code (like Pinto \etal did) but also the Code Under Test (CUT). This endeavour follows the findings of many reports\cite{Luo2014,Thorve2018,Lam2020b} revealing that much flakiness manifests in the CUT. Hence, we conduct a comparative study that highlights the impact of the two feature sets, \ie, sources of vocabulary on flakiness prediction.
 
-
 All in all, our results demonstrate that a more robust, time-sensitive validation has a consistent negative impact on the reported results of the original study (performance degrades by 7\% on average) but, fortunately, do not invalidate the key conclusions of the study, \ie, predictions are significantly better than random selections. 
 
 Additionally, we find re-assuring results that vocabulary-based models are more successful in Python than in Java (average performance of 80\% in Python in contrast to 61\% in Java), and perhaps surprisingly, that the information lying in the Code Under Test has a limited or no impact on the model performance. Taken together, these results corroborate the conclusion that the vocabulary of tests is indeed a viable and robust solution to the test flakiness problem.    
-
-
-%The remainder of this paper is structured as follows: Section II presents the original study and Section III explains our replication methodology. Section IV reports on the study results, while Section V discusses the implications and threats of this study.
-%We discuss related works in Section V and we conclude with perspectives in Section VI.
-
-

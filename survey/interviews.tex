@@ -1,12 +1,6 @@
 \section{Interviews and Analysis}
 \label{sec:survey-interviews}
 
-% Our initial goal is to explore with an open-minded the following topics:
-% \begin{itemize}
-%     \item The sources of flaky tests;
-%     \item The strategies for mitigating flaky tests;
-%     \item The automation needs for flakiness mitigation; 
-% \end{itemize}
 The objective of the interviewing process is to explore the topics of our research questions with an open mind instead of testing pre-designed questions.
 For this purpose, we pursue a qualitative research approach~\cite{creswell2017research} based on classic Grounded Theory concepts~\cite{adolph2011using}. 
 In this section, we explain our implementation of this approach from the interview design to the analysis of the results.
@@ -20,7 +14,7 @@ We also avoided making prior assumptions about participants' opinions or actions
 For example, we ask several questions about the testing practices before formulating our questions to avoid wrong assumptions about the use of automated testing or CI. 
 We also explained the non-judgemental nature of the interviews and encouraged participants to express their opinions freely.
 Specifically, we mentioned that the objective is not to assess the participants' knowledge about flakiness but rather to grasp their perception of it.
-Finally, we asked follow-up questions whenever possible and we favoured open-questions such as \textit{``Why did you opt for this measure?''} to incite participants to explain their motivations.
+Finally, we asked follow-up questions whenever possible and we favoured open questions such as \textit{``Why did you opt for this measure?''} to incite participants to explain their motivations.
 We structured our interview around the three following sections.
 \paragraph{\textbf{Context}}
 We asked questions to characterise the project and testing infrastructure.
@@ -53,9 +47,9 @@ We asked questions about the actions taken by participants to prevent and addres
     \item Do you face difficulties when dealing with flaky tests? 
     \item If yes: What are these difficulties and what could help you to overcome them?
 \end{enumerate}
+
 For each measure described by the participant, we asked follow-up questions to understand the motivations and consequences.
 When possible, we also asked follow-up questions about the measures that the participants did not take, \eg if they never mention fixing flaky tests, we could ask about the rationale behind it.
-%More specifically, when developers do not mention some measures that we observed in the grey literature (\eg fixing or reruns), we could ask questions why these measures were not adopted.
 All the interviews were performed with online calls where we explicitly asked the participants for recording permission. 
 The recordings lasted from 26 to 63 minutes with an average duration of 41 minutes.
 \subsubsection{Participants}
@@ -63,12 +57,10 @@ Our objective was to select practitioners who have experience in dealing with fl
 This diversity enriches the study and allows us to have a thorough understanding of the practitioner perspective.
 To ensure this diversity, we relied on several channels to invite potential participants.
 
-%\paragraph{Contact \& Selection}
 We shared our invitation with a brief description of the study objectives on online groups for software engineering practitioners.
 For instance, we targeted a group that gathers 265 practitioners that are interested in software testing and continuous integration.
 The group members are from large companies like Tesla, Google, Apple, VMWare, Netflix, Facebook, Spotify, etc.
 To include participants from other backgrounds, we also targeted groups of practitioners from FinTech companies, average-sized IT companies, and local startups.
-%We did not exclude practitioners based on their company size nor their positions.
 Following these invitations, we received answers from 19 practitioners who showed an interest in our study.
 After exchanges, five participants estimated that their experience is insufficient for the study and did not proceed with the interviews, thus our process ended up with 14 participants.
 This number of interviewees is typical in studies that approach similar topics~\cite{tomasdottir2017and,8999994}.
@@ -79,40 +71,37 @@ Indeed, the three last interviews did not lead to any changes in our analytical 
 Table~\ref{tab:participants} summarises the profile of our participants (role and years of experience) and their current companies (number of employees, domain, and number of users).
 To preserve the anonymity of our participants, we refer to them with code names, we omit their company names, and upon specific request, we also omit the experience and domain.
 Our participants have solid experience in software engineering, their experience ranges from 6 to 35 years, with an average of 16 years.
-%This strong experience allows us to 
 The participants also work in companies that vary significantly in terms of size and domain of activity.
 On top of the industrial experience, three of our participants contributed regularly to Open Source Software (OSS) as part of their job or as a side activity.
-%We believe that this diversity ...
-
 
 \begin{table}
 \vspace{-0.5em}
 \centering
 \caption{A summary of participants' profiles.}
-\vspace{-1.0em}
 \label{tab:participants}
 \resizebox{\columnwidth}{!}{
-\begin{tabular}{ccccccc} 
- \cline{2-7}
-  & \textbf{\textit{Role}} & \textbf{\textit{
-Years}} & \textbf{\textit{Size}} & \textbf{\textit{Domain}} & \textbf{\textit{Users}} & \textbf{\textit{OSS}}  \\  \hline
- P1 & Engineering Manager  & 24 & +1K  & Music & +200M & No \\ \hline
- P2 & CTO & 10 & +10 & Mobility  & - & No \\ \hline
- P3 & Tech Lead & 7 & +200 & Cloud & +30K & Yes \\ \hline
- P4 & QA Consultant & 12 & +2K & FinTech & +190K & No \\ \hline
- P5 & CTO & 14 & +10 & Infrastructure & - & No \\ \hline
- P6 & Staff Engineer & 20  & +1K & DevOPs & - & Yes \\ \hline
- P7 & Vice President & 17 & +200 & Cloud & +30K & Yes \\ \hline
- P8 & Architect & 7 & +5k & Online sales & +70M & No \\ \hline
- P9 & Senior Researcher & 35 & +20 & R\&D & - & No\\ \hline
- P10 & Architect & 30 & +24K & Virtualisation & +500K & No \\ \hline 
- P11 & Senior Engineer & 6 & +10k & - & +500M & No \\ \hline
- P12 & Principal Architect & 23 & +10k & Payment & +200M & No \\ \hline
- P13 & Front-end Developer & 7 & +40 & Banking & - & No \\ \hline
- P14 & Senior Engineer & - & +10k & - & +500M & No \\ \hline
-\end{tabular}
-}
+\begin{tabular}{c|c|c|c|c|c|c} 
+ \toprule
+  & \textbf{Role} & \textbf{
+Years} & \textbf{Size} & \textbf{Domain} & \textbf{Users} & \textbf{OSS}  \\  \midrule
+ P1 & Engineering Manager  & 24 & +1K  & Music & +200M & No \\ 
+ P2 & CTO & 10 & +10 & Mobility  & - & No \\ 
+ P3 & Tech Lead & 7 & +200 & Cloud & +30K & Yes \\ 
+ P4 & QA Consultant & 12 & +2K & FinTech & +190K & No \\ 
+ P5 & CTO & 14 & +10 & Infrastructure & - & No \\ 
+ P6 & Staff Engineer & 20  & +1K & DevOPs & - & Yes \\ 
+ P7 & Vice President & 17 & +200 & Cloud & +30K & Yes \\ 
+ P8 & Architect & 7 & +5k & Online sales & +70M & No \\ 
+ P9 & Senior Researcher & 35 & +20 & R\&D & - & No\\ 
+ P10 & Architect & 30 & +24K & Virtualisation & +500K & No \\  
+ P11 & Senior Engineer & 6 & +10k & - & +500M & No \\ 
+ P12 & Principal Architect & 23 & +10k & Payment & +200M & No \\ 
+ P13 & Front-end Developer & 7 & +40 & Banking & - & No \\ 
+ P14 & Senior Engineer & - & +10k & - & +500M & No \\ 
+ \bottomrule
+\end{tabular}}
 \end{table}
+
 \subsection{Analysis}
 As our study builds on semi-structured interviews, we relied on the strategy proposed by Schmidt \etal~\cite{schmidt2004analysis}.
 This strategy helps with inquiries where a prior understanding of the problem is postulated but the analysis remains open for exploring new topics and formulations.

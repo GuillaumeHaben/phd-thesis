@@ -1,5 +1,108 @@
 \chapter{Related Work}
 \label{chap:related-work}
 
+\setcounter{minitocdepth}{1}
+\justifying
+\textit{
+This chapter presents the related work to the different contributions of this dissertation. It focuses on flakiness research: the main empirical studies and research tools available at the time of writing. It also covers the existing studies on flakiness root-causing and flakiness prediction.
+}
+
 \chapterPage{
 }
+
+\section{Empirical Studies on Flakiness}
+
+% Flakiness in research, empirical studies
+Flakiness is a known issue in software testing but research studies have only gained momentum in the past few years \cite{Parry2021}.
+
+The first study on test flakiness was carried out by Luo \etal~\cite{Luo2014}. 
+They analysed 201 commits from 51 open-source projects in order to understand the root causes of flaky tests.
+They showed that Async Waits, Concurrency, and Test Order Dependency are the main categories of flakiness.
+Later studies replicated the work of Luo~\etal, showing that other flakiness root causes can be more predominant in different application domains. Gruber \etal \cite{Gruber2021} presented a large empirical analysis of more than 20,000 Python projects. They found Test Order Dependency and Infrastructure to be among the top reasons for flakiness in those projects.
+Thorve~\etal~\cite{Thorve2018} analysed 77 flakiness-related commits in 29 open-source Android applications and found that 22\% of these commits have flakiness caused by external factors like Hardware, Operating System version, and third-party libraries. Other studies also focused on particular software contexts~\cite{romano2021empirical,memon2013automated,hashemi2022empirical} or on highlighting the effects of flakiness on other software testing techniques such as mutation testing and program repair~\cite{Cordy2019,Shi2019,Qin2021}.
+
+Several studies have been conducted to inspect flakiness in the industry.
+Leong \etal~\cite{LeongSPTM19} studied flaky tests at Google and found that more than 80\% of test output transitions are caused by flakiness. 
+
+Eck \etal~\cite{Eck2019} surveyed 21 Mozilla developers, asking them to classify 200 flaky tests in terms of root causes and fixing efforts. 
+This study highlighted four new categories of flakiness: restrictive ranges, test case timeout, test suite timeout, and platform dependency.
+It also provided evidence about flakiness from the CUT and showed that flaky tests can have organisational impacts. Other surveys were also conducted to replicate this one~\cite{parry2022surveying,gruber2022survey} and Parry \etal conducted a wide literature review amounting 76 papers~\cite{Parry2021}.
+In our Chapter 4, we also conduct a survey but we leverage a qualitative approach (interviews) to address other aspects of flakiness in practice.
+More specifically, we investigate broader sources of flakiness (\eg SUT and infrastructure) instead of the root causes (\eg concurrency and timeouts).
+Our study also inspects the actions taken by practitioners in order to prevent, detect, and alleviate flaky tests.
+Result-wise, our findings confirm the observations of Eck \etal about (i) the impact of flakiness on the test suite reliability and (ii) the challenges of reproducing and debugging flaky tests.
+Furthermore, we highlight new flakiness impacts, on testing practices and product quality, and we synthesise a list of automation challenges for flakiness mitigation.
+
+Durieux \etal~\cite{durieux2020empirical} investigated the impact of flakiness and restarted builds on development workflow in Travis CI projects. They found that the more complex the project, the more likely it was to contain restarted builds. They also showed that those builds slowed down the merge of pull requests by a factor of three.
+
+\section{Flakiness Research Tools}
+
+% Tools for flakiness
+To help debug, reproduce, and comprehend the causes of flaky tests several tools have been introduced. \textit{DeFlaker}~\cite{Bell2018} detects flaky tests across commits, without performing any reruns, by checking for inconsistencies in test outcomes with regard to code coverage. Focused on test order dependencies, \textit{iDFlakies}~\cite{Lam2019iDFlakies} detects flaky tests by rerunning test suites in various orders. 
+
+To increase the chances of observing flakiness, Silva \etal~\cite{Silva2020} introduced \textit{Shaker}, a technique that relies on stress testing when rerunning potential flaky tests.  
+
+% ******************************************
+
+\section{Root Causing Flakiness}
+
+One of the first main contributions to flakiness root cause localisation was proposed by Lam~\etal~\cite{Lam2019RootCausing}. 
+%They conducted a study on five large software projects at Microsoft and showed that the number of build failures can quickly become significant despite having a low number of flaky tests. 
+They introduced a framework that helps developers at Microsoft to localise the root causes of their flaky tests. This framework uses an instrumentation tool to log the runtime properties of the test execution. Then it reruns the tests 100 times to produce logs for a passing and a failing execution. To analyse these logs and localise the root cause, they propose RootFinder, a tool that compares the logs of passing and failing executions to identify methods that can be responsible for flakiness. RootFinder relies on a predefined set of non-deterministic method calls and does not explore calls of unknown methods. Hence, it can only detect flaky tests that arise from method calls that the developer is already suspecting. In a second study, Lam \etal presented \textit{FaTB}, an automated tool that speeds the runtime of test suites by lowering timeouts and waits without impacting the overall test suite flake rate. 
+Romano \etal~\cite{romano2021empirical} analysed User Interface (UI) tests and showcased the flakiness root causes and the conditions needed to fix them.
+
+Zitfci and Cavalcanti~\cite{ziftci2020flake} presented Flakiness Debugger, a tool that compares the code coverage of passing and failing executions to localise the flakiness root cause. They ran their tool on 83 flaky tests and presented the localised root cause to two developers asking them for their evaluation. On average the developers found that in 48\% of the cases, flakiness was due to the exact statements spotted by Flakiness Debugger. Moreover, only 18\% of the outputs were considered inconclusive, hard to understand, or not useful.
+Both RootFinder and Flakiness Debugger relied on differences between passing and failing executions of flaky tests to localise flakiness in the CUT. In this study, we explore a new direction by analysing the differences between flaky and stable tests.
+
+Following their work with iDFlakies, Shi \etal presented iFixFlakies~\cite{Shi2019iFix} to automatically repair flaky tests. They introduced a framework that recommends patches for order-dependent flaky tests based on test patterns found in non-flaky tests that exhibit similar behaviour as flaky tests. Follow-up works were also conducted in this area ~\cite{li2022repairing}.
+  
+Morán~\cite{flakyloc} presented FlakyLoc, a tool for localising the root causes of flakiness in web applications. The tool reruns web tests while varying environmental factors (network, memory, CPU, browser type, operating system, and screen resolution) and records test results. Then, it uses ranking metrics (Ochiai and Tarantula \cite{sbfl-evaluation,tarantula}) to identify the environmental factor and values that are responsible for the flaky failure. The tool was only evaluated on one test case and it detected that the failure was caused by low screen resolution. 
+In Chapter 7, we will also address flakiness localisation, but we do not focus on any specific flakiness category and our analysis is based on the test coverage instead of environmental factors.
+
+
+
+\section{Flakiness Prediction}
+
+\begin{table*}[ht]
+\centering
+\caption{Existing machine learning-based studies aiming at detecting test flakiness. The majority of the techniques focus on detecting flaky tests, while half of the approaches rely on vocabulary features.}
+\label{table:relatedWork}
+\resizebox{\textwidth}{!}{\begin{tabular}{c | c | c | c | c | c | c}
+\toprule
+\textbf{Study} & \textbf{Model} & \textbf{Feature category} & \textbf{Features} & \textbf{Benchmark} & \textbf{Target}& \textbf{Year}\\ \midrule
+King et al.~\cite{King2018}                          & Bayesian network                    & Static \& dynamic                              & Code metrics           & Industrial                              & \textbf{Flaky tests} &  2018                        \\ %\hline\hline
+Pinto et al.~\cite{Pinto2020}                         & Random forest                       & Static                                         & \textbf{Vocabulary}             & DeFlaker                                & \textbf{Flaky tests} &          2020                \\ %\hline
+Bertolino et al.~\cite{Bertolino2020}                     & KNN                                 & Static                                         & \textbf{Vocabulary}             & DeFlaker                                & \textbf{Flaky tests}                     &   2020  \\ %\hline
+Haben et al.~\cite{Haben2021}                         & Random forest                       & Static                                         & \textbf{Vocabulary}             & DeFlaker                                & \textbf{Flaky tests}  &           2021             \\ %\hline
+Camara et al.~\cite{Camara2021VocabExtendedReplication}                        & Random forest                       & Static                                         & \textbf{Vocabulary}                 & iDFlakies                               & \textbf{Flaky tests}                &    2021      \\ %\hline
+Alshammari et al.~\cite{FlakeFlagger}                    & Random forest                       & Static \& dynamic                              & \begin{tabular}{@{}c@{}}Code metrics \&\\ Smells\end{tabular}  & FlakeFlagger                            & \textbf{Flaky tests}                        &  2021 \\ %\hline
+Fatima et al.~\cite{fatima2021flakify}                        & Neural Network                      & Static                                         & CodeBERT               & \begin{tabular}{@{}c@{}}FlakeFlagger \\iDFlakies\end{tabular}               & \textbf{Flaky tests}                     &   2021  \\ %\hline
+Pontillo et al.~\cite{Pontillo}                      & Logistic regression                 & Static                                         &\begin{tabular}{@{}c@{}}Code metrics \&\\ Smells\end{tabular} & iDFlakies                               &  \textbf{Flaky tests} &       2021      \\ 
+Lampel et al.~\cite{lampelOrange}                        & XGBoost                             & Static \& dynamic                              &  \begin{tabular}{@{}c@{}}Job execution \\metrics \end{tabular}                       & Industrial                              & Flaky failures               &   2021     \\ %\hline
+Qin et al.~\cite{qin2022peeler}                      & Neural Network                             & Static                                         & Dependency graph           & Industrial                              & \textbf{Flaky tests}                     & 2022  \\ %\hline
+Olewicki et al.~\cite{olewickiBrown}                      & XGBoost                             & Static                                         & \textbf{Vocabulary}             & Industrial                              & Flaky builds                      & 2022  \\ 
+Ackli et al.~\cite{akliflakycat}                      & Siamese Networks                             & Static                                         & CodeBERT             & Various                             & \textbf{Flaky tests}                     & 2022  \\ \bottomrule
+\end{tabular}}
+\end{table*}
+
+% Dataset of flaky tests and machine learning
+While they remain scarce, the recent publication of datasets of flaky tests~\cite{Bell2018,Lam2019iDFlakies,Gruber2021} enabled new lines of work. Prediction models were suggested to identify flaky tests from non-flaky tests. King \etal~\cite{King2018} presented an approach that leverages Bayesian networks to classify and predict flaky tests based on code metrics. Pinto \etal~\cite{Pinto2020} used a bag of words representation of each test to train a model able to recognize flaky tests based on the vocabulary from the test code. This line of work has gained a lot of momentum lately as models achieved higher performances. Several works were carried out to replicate those studies and ensure their validity in different settings~\cite{Camara2021VocabExtendedReplication} including the work presented in Chapter 5.
+
+% Heart beat at Apple
+In an industrial context, Kowalczyk \etal~\cite{Kowalczyk2020} implemented a flakiness scoring service at Apple. Their model quantifies the level of flakiness based on their historical flip rate and entropy (\ie changes in test outcomes across different revisions). Their goal was to identify and rank flaky tests to monitor and detect trends in flakiness. They were able to reduce flakiness by 44\% with less than 1\% loss in fault detection. In the study conducted in Chapter 8, we also rely on test history to help with flakiness prediction.
+
+% Flakeflagger
+More recently, \textit{FlakeFlagger}~\cite{FlakeFlagger} has been proposed. It builds a prediction model using an extended set of features from the code under test together with test smells. The research community continue to draw attention to this field by considering other possible features to predict flaky tests, this is the case of Peeler~\cite{qin2022peeler} for example, where the authors leveraged test dependency graphs to predict flaky tests.
+
+% False alarms identifier
+Less attention has been given to flaky failures or false alerts prediction. Herzig \etal~\cite{Herzig2015} used association rules to identify false alert patterns in the specific case of system and integration tests that contain steps. They evaluated their approach on Windows 8.1 and Microsoft Dynamics AX.
+
+% Brown builds
+Olewicki \etal investigated the possibility of leveraging vocabulary-based features on logs from failing builds to predict if failures are caused by defects in the code or by other non-deterministic issues including flaky test failures. It is interesting to note that their work focuses on builds and not tests as we do in our study.
+
+% Zeller's paper
+Finally, a recent study by Lampel \etal~\cite{lampelOrange} presented an approach that automatically classifies jobs by deciding if a job failure originates from a bug in the code or from flakiness. To do so, they relied on features from job executions, \eg CPU load, and run time. As such they are only concerned with some form of flaky failures and not with the utility of detecting flaky failures in CI, instead of tests as we do in this paper. 
+
+% Conclusion
+Table~\ref{table:relatedWork} summarizes the state-of-the-art of flakiness prediction in chronological order. By inspecting the table, we see that most of the studies focus on flaky tests, with just one focusing on flaky test failures. We also notice that static features like code metrics and test smells are often used but features based on vocabulary (\ie bag-of-words) are the most popular ones. In Chapter 8, we will see why focusing on flaky failures instead of tests is important and how challenging it is to get good prediction performance.
+

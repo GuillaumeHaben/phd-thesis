@@ -1,39 +1,28 @@
 \section{Results}
 \label{sec:replication-results}
 
-
-\subsection{RQ1: How well do vocabulary-based models identify flaky tests when using a  time-sensitive validation?}
+\subsection{RQ1: Time-Sensitive Validation}
 
 In this research question, we compare prediction model performance using a time-sensitive validation and a classical validation.
-The accuracy of a model is sensitive to the class imbalance. 
-In particular, the precision and recall metrics can easily be impacted when one class is under (or over) represented. 
-To alleviate this issue, we also report the Matthews Correlation Coefficient (MCC). 
-In our case, we focus on the MCC as it takes into consideration all four entries of the confusion matrix, True Positives (TP), True Negatives (TN), False Positives (FP) and False Negatives (FN).
-MCC is given by:
-
-\[
-    \frac{TN \times TP - FP \times FN}{\sqrt{(TN+FN)(TP+FP)(TN+FP)(FN+TP)}}
-\]
-
-\normalsize
-The MCC score ranges from 1, where the classifier did a perfect job (FP = FN = 0) to -1, where the classifier always predicted the wrong class (TP = TN = 0). 
-An MCC value of 0 would indicate that the model is no better than a random guess. 
 
 Figures~\ref{fig:prec-java}-\ref{fig:mcc-java} show the performance of our Random Forest classifier under time-sensitive and classical validation. 
-%Table ~\ref{javaNoTime} shows the results when we applied our time sensitive validation.
 Overall, we observe that the validation setup has an impact on the classifier performance.
 This impact varies significantly depending on the project, its size, and history of flaky tests.
 The projects Achilles, Hbase, OkHttp, and Togglz observe a decrease in their MCC score.
-The largest performance drop is observed in the OkHttp project, where the MCC dropped from 39\% to 18\%.
-The two exceptions are for Oozie and Oryx, where MCC increased respectively by 10\% and 13\%. 
+The largest performance drop is observed in the OkHttp project, where the MCC dropped from 0.39 to 0.18.
+The two exceptions are for Oozie and Oryx, where MCC increased by 0.10 and 0.13 points respectively. 
 In the case of Oryx, this can be explained by the fact that most of the flaky tests come from one revision, thus, the time-sensitive validation has little to no impact. 
 The difference can then be explained by the random selection of the samples when splitting the training and test set. 
 The phenomenon is only present for this project.
 In the case of Oozie, there is a considerable imbalance between the number of flaky tests (1039) and non-flaky tests (44). 
 Hence, the test set contains only 9 non-flaky tests, which might not be enough to draw conclusions.\\
 
-\begin{tcolorbox}
-The performances of a vocabulary-based model decrease under a time-sensitive validation (up to 21\% drop for MCC).
+\begin{tcolorbox}[
+    left=2pt,right=2pt,top=2pt,bottom=2pt,
+    arc=0pt,
+    boxrule=1.2pt
+]
+\textbf{RQ1:} The performances of a vocabulary-based model decrease under a time-sensitive validation (MCC value drops up to 0.21).
 Nonetheless, the approach is still able to decently predict flaky tests.
 \end{tcolorbox}
 
@@ -58,58 +47,18 @@ Nonetheless, the approach is still able to decently predict flaky tests.
   \end{minipage}
 \end{figure}
 
-% \begin{table}[h!]
-% \centering
-%  \begin{tabular}{c|c c c c c} 
-%  \hline
-%  Project & Precision & Recall & F1 & MCC & AUC \\ [0.25ex]
-%  \hline
-%  achilles & 0.95 & 0.81 & 0.87 & 0.86 & 0.90 \\
-%  hbase & 0.91 & 0.67 & 0.76 & 0.65 & 0.81 \\
-%  okhttp & 0.63 & 0.29 & 0.39 & 0.39 & 0.64 \\
-%  oozie & 0.99 & 1.00 & 0.99 & 0.84 & 0.87 \\
-%  oryx & 1.00 & 0.78 & 0.87 & 0.87 & 0.89 \\
-%  togglz & 0.67 & 0.31 & 0.40 & 0.42 & 0.65 \\ 
-%  \hline
-% \end{tabular}
-% \caption{Classifier performance for Java projects - No Time-sensitive}
-% \label{javaNoTime}
-% \end{table}
-
-% \begin{table}[h!]
-% \centering
-%  \begin{tabular}{c|c c c c c} 
-%  \hline
-%  Project & Precision & Recall & F1 & MCC & AUC \\ [0.25ex]
-%  \hline
-%  achilles & 1.00 & 0.64 & 0.78 & 0.79 & 0.82 \\
-%  hbase & 0.42 & 0.75 & 0.54 & 0.46 & 0.79 \\
-%  okhttp & 0.19 & 0.19 & 0.19 & 0.18 & 0.59 \\
-%  oozie & 0.98 & 1.00 & 0.99 & 0.94 & 0.95 \\
-%  oryx & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 \\
-%  togglz & 0.33 & 0.25 & 0.29 & 0.28 & 0.62 \\ 
-%  \hline
-% \end{tabular}
-% \caption{Classifier performance for Java projects - Time-sensitive}
-% \label{javaTime}
-% \end{table}
-
-%Overall, we can see that the performance of the model have an impact on the results. Our intuition was right, a model trained only on the available data at the time of the current revision will not perform as good as if it had been trained on all data in time. Gladly, the impact is limited and does not invalidate the approach. 
-%When researchers attempt to do flakiness prediction, we recommend to use, if possible, a time-sensitive validation in order to get performance closer to what we could get in a real-world scenario. This was the case for the DeFlaker dataset, as information about FT comes from different revision. It was then important to take into account the vocabulary evolution between revisions. \\
-
-\subsection{RQ2: How well do vocabulary-based models identify flaky tests in other programming languages?}
+\subsection{RQ2: Generalisation to other Programming Languages}
 \subsubsection{Predicting flaky tests in Python}
 Table~\ref{python} reports on the model performance when predicting flaky tests in 9 Python projects. 
 
 \begin{table}[t]
 \centering
-\vspace{1.0em}
 \caption{Classifier performance for Python projects}
 \label{python}
  \begin{tabular}{l|r r r r r} 
- \hline
+ \toprule
  \textbf{Project} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{MCC} & \textbf{AUC} \\ [0.25ex]
- \hline
+ \midrule
  bokeh & \textbf{1.00} & \textbf{0.91} & \textbf{0.95} & \textbf{0.95} & \textbf{0.95} \\
  cassandra-dtest & \textbf{0.96} & 0.43 & 0.58 & 0.63 & 0.71 \\
  celery & 0.85 & 0.54 & 0.64 & 0.66 & 0.77 \\
@@ -119,37 +68,34 @@ Table~\ref{python} reports on the model performance when predicting flaky tests 
  python-telegram-bot & \textbf{1.00} & \textbf{0.99} & \textbf{1.00} & \textbf{0.99} & \textbf{1.00} \\ 
  spyder & \textbf{0.92} & 0.77 & 0.83 & 0.82 & 0.88 \\ 
  typed-python & \textbf{1.00} & 0.86 & \textbf{0.91} & \textbf{0.92} & \textbf{0.93} \\ 
- \hline
+ \bottomrule
 \end{tabular}
-\vspace{1.0em}
 \end{table}
 
-First, we observe that for 5 projects out of 9, the model reaches a great performance with MCC and F1 scores greater than 90\%. 
-For the rest of the projects, these scores are always higher than 50\%, except for Pipenv, which shows the lowest results with an MCC of 37\%.
-Similarly, all the studied projects have a precision greater than 78\% and 7 out of the 9 studied projects have a precision higher than 90\%.
+First, we observe that for 5 projects out of 9, the model reaches a great performance with MCC values greater than 0.9. 
+For the rest of the projects, these scores are always higher than 0.50, except for Pipenv, which shows the lowest results with an MCC value of 0.37.
+Similarly, all the studied projects have a F1-score greater than 90\% and 7 out of the 9 studied projects have a precision higher than 60\%.
 These observations show that the vocabulary-based model is able to predict flaky tests with decent performance in Python projects.
 
 \subsubsection{Predicting manifest flaky tests}
 
 Table \ref{pythonManifestResults} shows the model performance in detecting manifest flaky tests based on tests marked as flaky by developers.
-The results show a perfect performance with a MCC and F1-score values of 100\%, confirming that a model trained on tests labelled by developers can be used to predict manifest flaky tests.
+The results show a perfect performance with MCC and F1-score values of 1 and 100\% respectively, confirming that a model trained on tests labelled by developers can be used to predict manifest flaky tests.
 Interestingly, 2 of the 20 manifest tests were not labelled as flaky by the developers and were only identified with the reruns.
 Yet, the model was able to predict them by only learning from tests marked by developers.
 In a real-world scenario, we could picture the model finding those tests and automatically annotating them.
 
 \begin{table}[t!]
-\vspace{1.0em}
 \caption{Classifier performance for manifest flaky test in the Python-telegram-bot project}
 \label{pythonManifestResults}
 \centering
  \begin{tabular}{l|r r r r r} 
- \hline
+ \toprule
  \textbf{Project} & \textbf{Precision} & \textbf{Recall} & \textbf{F1} & \textbf{MCC} & \textbf{AUC} \\ [0.25ex]
- \hline
+ \midrule
  python-telegram-bot & 1.00 & 1.00 & 1.00 & 1.00 & 1.00 \\ 
- \hline
+ \bottomrule
 \end{tabular}
-\vspace{1.0em}
 \end{table}
 
 Figure \ref{manifest-flaky-example} shows the test \texttt{test\_idle()} from the class \texttt{TestUpdater}\footnote{https://github.com/python-telegram-bot/python-telegram-bot}.
@@ -159,8 +105,6 @@ In order to understand how the model predicted that this test is flaky, we analy
 These features do not completely reflect the model prediction and they can be biased~\cite{Permutat82:online}, but they give us an idea of the vocabulary that the classifier is using for its predictions.
 In the project Python-telegram-bot, we found that the top ten features include the keywords: \texttt{process, timeout, duration, seconds}, which are also related to time and concurrency.
 Hence, the model's ability to predict the test flakiness based on the vocabulary.
-%We list the top 15 features in the case of our model trained for the Python-telegram-bot project: \emph{'match', 'in', 'process', 'timeout', "'", 'longitude', 'file', 'dict', 'id', 'send', 'duration', 'page', "jpg'", 'update', 'seconds'}. 
-% In the view of this, we notice vocabulary linked with time like \emph and the third most important feature is \emph{process}. This gives us a hint on why the model was able to classify this test as being flaky. 
 
 \begin{figure}[ht]
 \centering
@@ -173,9 +117,8 @@ Figure \ref{manifest-flaky-example2} shows the test \texttt{test\_to\_dict()} fr
 Unordered collections have been identified as a cause of flakiness by several works as developers can wrongly assume that elements of a collection will be returned in a specific order~\cite{Luo2014,Dutta2020}.
 In Python, the return order of dictionaries has varied over the different versions~\cite{PythonDoc, unorderedCollectionsStackOverflow}. In our case, we found that the keyword \texttt{dict}, which is present in a large number in this test, was among the first eight most important features of our classifier.
 This feature allowed the vocabulary-based model to predict that this test is flaky.
-%Again, this helps to understand that tests using unordered collections are likely to have a higher degree of flakiness. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 \centering
 \includegraphics[width=0.8\textwidth]{figures/replication/manifestFlakyExample2.png}
 \caption{A manifest flaky test not labelled @flaky}
@@ -184,37 +127,18 @@ This feature allowed the vocabulary-based model to predict that this test is fla
 
 We conclude that the approach is extendable to the Python language, supporting the idea that the vocabulary-based prediction can be generalisable to other projects and programming languages. Moreover, we saw that we can take advantage of a flaky tests classifier using vocabulary-based features in order to identify vocabulary linked to flakiness and help developers write better quality tests.\\
 
-\begin{tcolorbox}
-Vocabulary-based models can be generalised to other projects and programming languages. 
+\begin{tcolorbox}[
+    left=2pt,right=2pt,top=2pt,bottom=2pt,
+    arc=0pt,
+    boxrule=1.2pt
+]
+\textbf{RQ2:} Vocabulary-based models can be generalised to other projects and programming languages. 
 Besides, these models can leverage annotated flaky tests to predict and annotate manifest flaky tests that were not known to developers.
 \end{tcolorbox}
 
-\subsection{RQ3: Is the vocabulary of Code Under Test useful for flakiness prediction?}
+\subsection{RQ3: Extended Set of Features}
 
-% Finally, in RQ3 we seek to understand if features from the Code Under Test can be useful in order to reach better predictions. In view of this, we used our new, cost effective approach to retrieve the CUT for each test as presented in the section III. 
 Figures~\ref{fig:prec-java-cut}-\ref{fig:mcc-java-cut} show the results of our prediction model in Java projects, while figures \ref{fig:prec-python-cut}-\ref{fig:mcc-python-cut} present the model performance in Python projects. 
-%For both cases, the 3 most similar functions retrieved by IR from the CUT were added to the tests. 
-
-% \begin{table}[h!]
-% \centering
-%  \begin{tabular}{c|c c c c c} 
-%  \hline
-%  Project & Precision & Recall & F1 & MCC & AUC \\ [0.25ex]
-%  \hline
-%  bokeh & 0.99 & 0.81 & 0.89 & 0.89 & 0.90 \\
-%  cassandra-dtest & 0.92 & 0.47 & 0.61 & 0.65 & 0.74 \\
-%  celery & 0.89 & 0.43 & 0.57 & 0.61 & 0.72 \\
-%  jira & 0.92 & 0.98 & 0.95 & 0.82 & 0.89 \\
-%  pipenv & 0.96 & 0.21 & 0.33 & 0.43 & 0.60 \\ 
-%  python-amazon & 0.91 & 0.98 & 0.95 & 0.82 & 0.88 \\ 
-%  python-telegram-bot & 0.99 & 0.92 & 0.95 & 0.95 & 0.96 \\ 
-%  spyder & 0.90 & 0.70 & 0.79 & 0.77 & 0.85 \\ 
-%  typed-python & 0.98 & 0.90 & 0.94 & 0.94 & 0.95 \\ 
-%  \hline
-% \end{tabular}
-% \caption{Classifier performance for Python projects when CUT is considered}
-% \label{pythonCUT}
-% \end{table}
 
 \begin{figure}[!htbp]
   \centering
@@ -259,43 +183,22 @@ Figures~\ref{fig:prec-java-cut}-\ref{fig:mcc-java-cut} show the results of our p
 
 
 In figures~\ref{fig:prec-java-cut}-\ref{fig:mcc-java-cut}, we observe that the impact of including the CUT does not have a consistent impact on the model performance in Java projects.
-Adding the CUT improves the model performance in Hbase, Okhttp and Togglz, with an increase of the MCC score between 1\% and 7\%.
-However, the opposite effect is observed in the projects Achilles and Oryx where the MCC dropped by 6\% and 2\% respectively.
+Adding the CUT improves the model performance in Hbase, Okhttp and Togglz, with an increase of the MCC value between 0.01 and 0.07.
+However, the opposite effect is observed in the projects Achilles and Oryx where the MCC dropped by 0.06 and 0.02 respectively.
 As for the Oozie project, including the CUT does not seem to impact the model performance.
 Nonetheless, these performance improvements and losses remain minor in all the studied Java projects.
 
-
-% \begin{table}[h!]
-% \centering
-%  \begin{tabular}{c|c c c c c} 
-%  \hline
-%  Project & Precision & Recall & F1 & MCC & AUC \\ [0.25ex]
-%  \hline
-%  achilles & 1.00 & 0.55 & 0.71 & 0.73 & 0.77 \\
-%  hbase & 0.45 & 0.70 & 0.55 & 0.47 & 0.78 \\
-%  okhttp & 1.00 & 0.05 & 0.09 & 0.22 & 0.52 \\
-%  oozie & 0.98 & 1.00 & 0.99 & 0.94 & 0.95 \\
-%  oryx & 1.00 & 0.96 & 0.98 & 0.98 & 0.98 \\
-%  togglz & 0.50 & 0.25 & 0.33 & 0.35 & 0.62 \\ 
-%  \hline
-% \end{tabular}
-% \caption{Classifier performance for Java projects - Time-sensitive when CUT is considered}
-% \label{javaTimeCUT}
-% \end{table}
-
-
-
 Figures \ref{fig:prec-python-cut}-\ref{fig:mcc-python-cut} show a similar effect of the CUT usage in Python projects.
 Out of the nine studied, six projects report a lower performance when adding the CUT to the features.
-This performance loss is up to 13\% in the projects Jira and Python-amazon.
-On the other hand, the projects Cassandra-dtest, Pipenv, and Typed\_python have better predictions when the CUT is used --- an increase in the MCC value by 2\%, 6\% and 2\% respectively.
-% To understand these observations, we manually analysed the vectors formed with and without the CUT.
-% We found that the functions of the CUT are likely adding noise. 
-% When we add the CUT in addition to the test, the vocabulary used increase (the size of each vector increases in accordance). 
+This performance loss is up to 0.13 (MCC) in the projects Jira and Python-amazon.
+On the other hand, the projects Cassandra-dtest, Pipenv, and Typed\_python have better predictions when the CUT is used --- an increase in the MCC value by 0.02, 0.06 and 0.02 respectively.
+
 Based on the observations in both Java and Python, we conclude that including the CUT does not consistently improve the performance of a vocabulary-based model for predicting flaky tests.
 
-\begin{tcolorbox}
-Surprisingly, the vocabulary of the Code Under Test, which is commonly considered as a source of flakiness, does not improve the performance of flakiness prediction models. 
+\begin{tcolorbox}[
+    left=2pt,right=2pt,top=2pt,bottom=2pt,
+    arc=0pt,
+    boxrule=1.2pt
+]
+\textbf{RQ3:} Surprisingly, the vocabulary of the Code Under Test, which is commonly considered as a source of flakiness, does not improve the performance of flakiness prediction models. 
 \end{tcolorbox}
-
-%We still think that information laying in the CUT can give hints about the degree of flakiness of a test. Future work might investigate how to select the interesting part from the CUT.

@@ -2,17 +2,15 @@
 \label{sec:sherloc-introduction}
 
 Regression testing is a key component of continuous integration (CI) that checks whether code changes integrate well in the codebase without breaking any existing functionality. To this end, it is assumed that failing tests indicate the presence of faults, introduced by the latest changes. However, some tests break this assumption by failing for reasons other than faults, as for instance,  they exhibit non-deterministic behaviour, thereby sending confusing signals to developers. Such tests are usually called \textit{flaky tests}.
-%A common definition of flakiness is a test that fails and passes for the exact same code~\cite{??}. 
 
-Academic and industrial reports have emphasised the adverse effects of test flakiness in software development. Specifically, Google reported that 16\% of their tests manifested some level of flakiness, while more than 90\% of their test transitions, either to failing or passing, were due to flakiness~\cite{LeongSPTM19}. %~\cite{Micco2017}. 
-As the \textit{de facto} approach for detecting flaky tests is to rerun them \cite{habchi2021qualitative, GruberFraser22}, detecting large numbers of flaky tests can be time- and resource-consuming. Indeed, Google reports that between 2 to 16\% of their CI resources are dedicated in rerunning flaky tests~\cite{Micco2017}. It is noted  that other companies, like Microsoft~\cite{Lam2020b},  Spotify~\cite{FlakinessSpotify} and Mozilla~\cite{Rahman2018}, also report similar issues when dealing with test flakiness. 
+Academic and industrial reports have emphasised the adverse effects of test flakiness in software development. Specifically, Google reported that 16\% of their tests manifested some level of flakiness, while more than 90\% of their test transitions, either to failing or passing, were due to flakiness~\cite{LeongSPTM19}. 
+As the \textit{de facto} approach for detecting flaky tests is to rerun them \cite{Habchi2022Qualitative, gruber2022survey}, detecting large numbers of flaky tests can be time- and resource-consuming. Indeed, Google reports that between 2 to 16\% of their CI resources are dedicated in rerunning flaky tests~\cite{Micco2017}. It is noted  that other companies, like Microsoft~\cite{Lam2020b},  Spotify~\cite{FlakinessSpotify} and Mozilla~\cite{Rahman2018}, also report similar issues when dealing with test flakiness. 
 
-Perhaps more importantly, test flakiness affects team productivity and software quality \cite{habchi2021qualitative}. This is because flaky failures interrupt the CI and make developers waste time in investigating false issues~\cite{GTAC2016,Eck2019,LeongSPTM19,habchi2021qualitative}. Additionally, the accrual of flaky tests breaks the trust in regression testing, leading developers to disregard legitimate failure signals believing them to be false~\cite{habchi2021qualitative, GruberFraser22}. This situation often results in faults slipping into production systems~\cite{Rahman2018}. Moreover, code quality is often linked with the level of flakiness incurred \cite{habchi2021qualitative} and thus, developers need to know where it comes from and understand the causes of flakiness to avoid introducing and spreading it. 
+Perhaps more importantly, test flakiness affects team productivity and software quality \cite{Habchi2022Qualitative}. This is because flaky failures interrupt the CI and make developers waste time in investigating false issues~\cite{GTAC2016,Eck2019,LeongSPTM19,Habchi2022Qualitative}. Additionally, the accrual of flaky tests breaks the trust in regression testing, leading developers to disregard legitimate failure signals believing them to be false~\cite{Habchi2022Qualitative, gruber2022survey}. This situation often results in faults slipping into production systems~\cite{Rahman2018}. Moreover, code quality is often linked with the level of flakiness incurred \cite{Habchi2022Qualitative} and thus, developers need to know where it comes from and understand the causes of flakiness to avoid introducing and spreading it. 
 
 Given the adverse effects of test flakiness, engineers and researchers aim at developing 
-%Considering its effects on the CI, productivity, and software quality, flakiness mitigation became important and often a priority. % JJ: cite? & JJ: on the cost of software development and maintenance. 
-%As any mitigation strategy requires, before all, the identification of a test as flaky, many studies develop 
-detection techniques that can predict whether a test is potentially flaky. These approaches rely on a number of runs and re-runs, such as \textsc{iDFlakies}~\cite{Lam2019iDFlakies} and \textsc{Shaker}~\cite{Silva2020}, coverage analysis like \textsc{DeFlaker}~\cite{Bell2018}, or static and dynamic test features~\cite{alshammari2021flakeflagger,Haben2021,Pinto2020,Dong2021,Camara2021VocabExtendedReplication,Camara2021a,Fatima2021}.  
+
+detection techniques that can predict whether a test is potentially flaky. These approaches rely on a number of runs and re-runs, such as \textsc{iDFlakies}~\cite{Lam2019iDFlakies} and \textsc{Shaker}~\cite{Silva2020}, coverage analysis like \textsc{DeFlaker}~\cite{Bell2018}, or static and dynamic test features~\cite{FlakeFlagger,Haben2021,Pinto2020,Dong2021,Camara2021VocabExtendedReplication,camara2021use,fatima2021flakify}.  
 Evaluated on open-source projects, these approaches showed promising detection accuracy and considerably decreased the amount of time and resources needed to detect flaky tests. 
 
 Although flakiness detection methods are important, alone, they cannot reduce the prevalence of test flakiness. This is because on the one hand there are only partial approaches to  the problem,  such as  \textsc{iFixFlakies}~\cite{Shi2019iFix} and \textsc{Flex}~\cite{FLEX} that are only applicable to specific cases, and the inherent difficulties in isolating/controlling the flakiness causes on the other. For instance, \textsc{iFixFlakies}~\cite{Shi2019iFix} fixes order-dependent tests by identifying helper statements in other tests, whereas \textsc{Flex}~\cite{FLEX} identifies  assertion bounds that minimise flakiness stemming from algorithmic randomness. At the same time, many prevalent categories of flakiness, \eg  Asynchronous Waits and Concurrency~\cite{Gruber2021,romano2021empirical,Luo2014, Eck2019}, remain unaddressed by fixing approaches. This is mainly due to the difficulty of identifying  and controlling the cause of flakiness~\cite{Eck2019}. 
@@ -24,11 +22,11 @@ In this paper, we address this challenge by re-targeting Fault Localisation (FL)
 In view of this, we investigate the appropriateness of a variety of fault localisation methods, such as Spectrum-Based Fault Localisation (SBFL), change history metrics, and static code metrics in identifying flaky classes. 
 Our study aims to answer the following four research questions:
 
-\begin{itemize}%[wide=5pt,noitemsep,topsep=0pt]
-    \item \textbf{\textsc{RQ1:}} Are SBFL-based approaches effective in identifying flaky classes?
-    \item \textbf{\textsc{RQ2:}} How do code and change metrics contribute to the identification of flaky classes?
-    \item \textbf{\textsc{RQ3:}} How can ensemble learning improve the identification of flaky classes?
-    \item \textbf{\textsc{RQ4:}} How does an SBFL-based approach perform for different flakiness categories?
+\begin{itemize}[label={}]
+    \item \textbf{\textsc{RQ1:}} \emph{Are SBFL-based approaches effective in identifying flaky classes?}
+    \item \textbf{\textsc{RQ2:}} \emph{How do code and change metrics contribute to the identification of flaky classes?}
+    \item \textbf{\textsc{RQ3:}} \emph{How can ensemble learning improve the identification of flaky classes?}
+    \item \textbf{\textsc{RQ4:}} \emph{How does an SBFL-based approach perform for different flakiness categories?}
 \end{itemize}
 
 To answer these questions, we analyse five Open Source projects where test flakiness has been fixed during the project evolution. Our analysis shows that: 
@@ -38,25 +36,5 @@ To answer these questions, we analyse five Open Source projects where test flaki
     This method also reduces the average effort wasted by developers to 19\% of the effort spent when inspecting all classes covered by the flaky test.
     \item The ensemble method is effective for major flakiness categories. Concurrency and Asynchronous Waits are identified effectively, with 38\% and 30\% of their flaky classes ranked at the top, respectively.
 \end{itemize}
-%  \begin{itemize}[wide=5pt,noitemsep,topsep=0pt]
-    
-    %   \textbf{Finding 1:} Combining multiple SBFL \formulas results in ranking 58\% of flaky classes in the top 10 suggestions, with 13\% of them at the top-1.  
-    %   %On median, a developer would have to go through 6.5 classes before encountering the flaky one (wasted effort).
-    %   Furthermore, with this approach, we can reduce the average effort spent to locate flaky classes to 19\% of the effort spent when examining all classes covered by flaky tests; looking at the median, it decreases to 8\%.
-    
-    %   \textbf{Finding 2:}  We show that adding signals from change and size metrics to SBFL scores allows us to better break ties between the classes located near the top and consequently rank 24\% of flaky classes at the top.
-        
-    %  \textbf{Finding 3:}  An ensemble of models based on SBFL, change, and size metrics, yields the best results with 61\% of flaky classes in the top 10 and 26\% of them at the top. 
-    % %This method also lowers the average effort wasted by developers to 3.5.
-    % This method also reduces the average effort wasted by developers to 19\% of the effort spent when they inspect all the classes covered by the flaky test. 
-    
-    %  \textbf{Finding 4:}  The ensemble method is effective for major flakiness categories. Concurrency and Asynchronous Waits are identified effectively, with 38\% and 30\% of their flaky classes ranked at the top, respectively. 
-     
-%\end{itemize}
 
 To facilitate the reproducibility of this study, we provide all used scripts,  the set of collected flaky classes, and detailed results in a comprehensive package\footnote{\url{https://github.com/serval-uni-lu/sherlock.replication}}.
-
-%The remaining of this paper is organised as follows.
-%Section~\ref{sec:data_collection} describes the data collection process, Section~\ref{sec:design} describes the study design, and Section~\ref{sec:results} reports the study results.
-%Section~\ref{sec:discussion} discusses the results and Section~\ref{sec:threats} reviews potential threats to validity.
-%Finally, Section~\ref{sec:related_works} presents the related works and Section~\ref{sec:conclusion} concludes with future works. %Further contributions: dataset and replication package

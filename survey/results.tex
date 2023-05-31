@@ -199,46 +199,52 @@ Our participants also raised the issue of system buggy non-deterministic feature
 \subsection{\textsc{RQ3}: How do practitioners address flaky tests?}
 
 \begin{table*}[htbp]
-\vspace{-0.6em}
 \centering
 \caption{The number and percentage of grey literature articles and interviews for each mitigation measure.}\label{table:strategies}
-\vspace{-1.1em}
-\begin{tabularx}{\textwidth}{lXcccc}
- \cline{2-6}
-     \multicolumn{1}{c}{} &  \textbf{\textit{Strategy}}  & \textbf{\textit{\#GL}} & \textbf{\textit{\%GL}} & \textbf{\textit{\#Int.}} & \textbf{\textit{\%Int.}}\\  \cline{2-4}
-    \hline
+\resizebox{\textwidth}{!}{\begin{tabular}{c p{8cm} c c c c}
+\toprule
+\multicolumn{1}{c}{} &  \textbf{Strategy}  & \textbf{\#GL} & \textbf{\%GL} & \textbf{\#Int.} & \textbf{\%Int.}\\
+     
+\midrule
     
-    \multirow{4}{*}{{\textbf{Prevent}}} &  \textbf{Setup a reliable infrastructure} with processes properly adapted to the testing activity.
-     & 4 & 11\% & 9 & 64\% \\  %\cline{2-4}
-     & \textbf{Define guidelines} that should be respected when writing tests and enforced through reviews.   & 5 & 13\% & 9 & 64\%\\  %\cline{2-4}
-    & \textbf{Limit external dependencies} by mocking connections, services, and dependencies. & 9 & 24\% & 1 & 7\% \\  %\cline{2-4}
+\multirow{9}{*}{{\textbf{Prevent}}} 
+
+&  \textbf{Setup a reliable infrastructure} with processes properly adapted to testing activities.
+& \multirow{2}{*}{4} & \multirow{2}{*}{11\%} & \multirow{2}{*}{9} & \multirow{2}{*}{64\%} \\  %\cmidrule(r){2-6}
+& \textbf{Define guidelines} that should be respected when writing tests and enforced through reviews.   & \multirow{3}{*}{5} & \multirow{3}{*}{13\%} & \multirow{3}{*}{9} & \multirow{3}{*}{64\%}\\  %\cmidrule(r){2-6}
+& \textbf{Limit external dependencies} by mocking dependencies. & \multirow{2}{*}{9} & \multirow{2}{*}{24\%} & \multirow{2}{*}{1} & \multirow{2}{*}{7\%} \\  %\cmidrule(r){2-6}
+& \textbf{Customise the testing framework} to avoid flaky features. & \multirow{2}{*}{4} & \multirow{2}{*}{11\%} & \multirow{2}{*}{1} & \multirow{2}{*}{7\%} \\  
     
-    & \textbf{Customise the testing framework} to avoid flaky features. & 4 & 11\% & 1 & 7\% \\  \hline
+\midrule
     
+\multirow{11}{*}{{\textbf{Detect}}} 
     
-    \multirow{5}{*}{{\textbf{Detect}}} 
+& \textbf{Rerun} the failing test multiple times to check if it is a real or a flaky failure.  & \multirow{2}{*}{14} & \multirow{2}{*}{37\%} & \multirow{2}{*}{7} & \multirow{2}{*}{50\%} \\  %\cmidrule(r){2-6}
+& \textbf{Manually analyse} the failure message and trace to determine if the test is flaky.  & \multirow{2}{*}{17} & \multirow{2}{*}{45\%} & \multirow{2}{*}{3} & \multirow{2}{*}{21\%} \\ %\cmidrule(r){2-6}
+& \textbf{Check the test execution history} to distinguish flaky from real failures.  & \multirow{2}{*}{8} & \multirow{2}{*}{21\%} & \multirow{2}{*}{2} & \multirow{2}{*}{14\%} \\ %\cmidrule(r){2-6}
+& \textbf{Proactively expose} test flakiness before it manifests in the CI.   & \multirow{2}{*}{5} & \multirow{2}{*}{13\%} & \multirow{2}{*}{2} & \multirow{2}{*}{14\%} \\ %\cmidrule(r){2-6}
+& \textbf{Compare test coverage} to the modifications of the commit under test to identify flaky failures.  & \multirow{3}{*}{2} & \multirow{3}{*}{5\%} & \multirow{3}{*}{1} & \multirow{3}{*}{7\%} \\ 
     
-    & \textbf{Rerun} the failing test multiple times to check if it is a real failure or a flaky one.  & 14 & 37\% & 7 & 50\% \\  %\cline{2-4}
-    & \textbf{Manually analyse} the failure message and trace to determine if the test is flaky.  & 17 & 45\% & 3 & 21\% \\ %\cline{2-4}
-    & \textbf{Check the test execution history} to distinguish flaky failures from real failures.  & 8 & 21\% & 2 & 14\% \\ %\cline{2-4}
-    & \textbf{Proactively expose} test flakiness before it manifests in the CI.   & 5 & 13\% & 2 & 14\%\\ 
-    %\cline{2-4}
-    & \textbf{Compare test coverage} to the modifications of the commit under test to identify flaky failures.  & 2 & 5\% & 1 & 7\% \\ 
-      \hline
+\midrule
     
+\multirow{10}{*}{{\textbf{Treat}}} 
     
+& \textbf{Fix} the root cause of flakiness to remove the non-deterministic behaviour. & \multirow{2}{*}{15} & \multirow{2}{*}{39\%} & \multirow{2}{*}{7} & \multirow{2}{*}{50\%} \\  %\cmidrule(r){2-6}
+& \textbf{Ignore} flaky tests that are not common or costly (based on the flake rate \& periodicity). & \multirow{2}{*}{2} & \multirow{2}{*}{5\%} & \multirow{2}{*}{5} & \multirow{2}{*}{36\%}\\  %\cmidrule(r){2-6}
+& \textbf{Quarantine} flaky tests by isolating them from the blocking path that commands the CI. & \multirow{3}{*}{7} & \multirow{3}{*}{18\%} & \multirow{3}{*}{4} & \multirow{3}{*}{23\%} \\  %\cmidrule(r){2-6}
+& \textbf{Remove} the test permanently. & 2 & 5\% & 4 & 23\% \\  %\cmidrule(r){2-6}
+& \textbf{Document} flaky tests in databases, issues, alerts, or internal reports. & \multirow{2}{*}{8} & \multirow{2}{*}{21\%} & \multirow{2}{*}{3} & \multirow{2}{*}{21\%} \\  
     
-    \multirow{5}{*}{{\textbf{Treat}}} & \textbf{Fix} the root cause of flakiness to remove the non-deterministic behaviour. & 15 & 39\% & 7 & 50\% \\  %\cline{2-4}
-    & \textbf{Ignore} flaky tests that are not common or costly (based on the flake rate and periodicity). & 2 & 5\% & 5 & 36\%\\  %\cline{2-4}
-    & \textbf{Quarantine} flaky tests by isolating them from the blocking path that commands the CI. & 7 & 18\% & 4 & 23\% \\  %\cline{2-4}
-    & \textbf{Remove} the test permanently from the suite. & 2 & 5\% & 4 & 23\% \\  %\cline{2-4}
-    & \textbf{Document} flaky tests in databases, issues, alerts, or internal reports. & 8 & 21\% & 3 & 21\% \\  \hline
+\midrule
     
-     \multirow{2}{*}{{\textbf{Support}}} & \textbf{Monitor and log} system interactions and test outcomes. & 8 & 21\% & 9 & 64\% \\  %\cline{2-4}
-     & \textbf{Establish testing workflows} that protect the CI. & 2 & 5\% & 4 & 23\% \\ \hline
-\end{tabularx}
-\vspace{-0.7em}
+\multirow{4}{*}{{\textbf{Support}}} 
+     
+& \textbf{Monitor and log} system interactions and test outcomes. & \multirow{2}{*}{8} & \multirow{2}{*}{21\%} & \multirow{2}{*}{9} & \multirow{2}{*}{64\%} \\  %\cmidrule(r){2-6}
+& \textbf{Establish testing workflows} that protect the CI. & \multirow{2}{*}{2} & \multirow{2}{*}{5\%} & \multirow{2}{*}{4} & \multirow{2}{*}{23\%} \\ 
+\bottomrule
+\end{tabular}}
 \end{table*}
+
 Table~\ref{table:strategies} summarises the measures identified in our GLR.
 The columns \textit{\#GL} and \textit{\#Int.} report the number of times where the measure was mentioned in grey literature and interviews, respectively, while the columns \textit{\%GL} and \textit{\%Int.} report the percentages.
 The full results summary is available within our artefacts~\cite{artefacts}.
@@ -317,14 +323,14 @@ In the case of P8, this choice is due to system specifications that make rerunni
 \paragraph{\textbf{Check test history}}
 Some practitioners keep a record of the test execution history, \ie all test passes and fails for each build.
 When a suspicious test failure is observed, developers inspect these records to check if the test has already shown a random behaviour.
-Palmer~\etal~\cite{TestFlak61:online} argue that when these records are visualised they can help developers in distinguishing flaky failures easily and thus gain a lot of investigation time.
+Palmer~\etal~\cite{FlakinessSpotify} argue that when these records are visualised they can help developers in distinguishing flaky failures easily and thus gain a lot of investigation time.
 P11 and P14 described a system in their company, which relies on the execution records to score tests.
 Based on the past passes and failures, a test receives a flakiness score that expresses the probability for this test to be flaky.
 P14 described how these scores helped her when a flaky test manifested, \textit{``it is very good when it tells that it is 90\% flaky and you can just go on with your day knowing that it's because of flakiness"}.
 
 \paragraph{\textbf{Expose}}
 As explained in RQ2, when a flaky failure occurs in the CI, it disrupts the work progress and wastes developers' time and efforts.
-For these reasons, some practitioners attempt to reveal flaky tests before CI failures~\cite{Amachine72:online,TestFlak61:online}.
+For these reasons, some practitioners attempt to reveal flaky tests before CI failures~\cite{liviu_machine_2019,FlakinessSpotify}.
 In this case, new tests are rerun several times to ensure that they are stable, before adding them to the main test suite.
 Among our interviewees, only P1 and P4 reported adopting this practice in their companies.
 \textit{``Before committing the test, you should run it a thousand times (counting different configurations and device types) and it must be a thousand greens (passes)"} (P1).
@@ -336,7 +342,7 @@ Among our interviewees, only P1 and P4 reported adopting this practice in their 
 \paragraph{\textbf{Leverage test coverage}}
 When practitioners suspect that a test failure is flaky, they compare the coverage of the failing test to the modifications performed by the commit that triggered the build.
 If the intersection between these two is empty, the test is considered flaky.
-This process can be performed manually by developers (P14) or automatically using tools like DeFlaker~\cite{bell_deflaker_2018}.
+This process can be performed manually by developers (P14) or automatically using tools like DeFlaker~\cite{Bell2018}.
 However, P14 explains that, due to hidden dependencies between projects, this technique is not always effective.
 
 
@@ -435,7 +441,7 @@ In the same vein, P4 said that even when logs are available, a lot of assistance
 These two tasks are coupled because an automated analysis is critical to benefit from the data collected by the monitoring process.
 Indeed, P4 said that their GUI testing system produces overwhelming amounts of logs and yet it is impossible to manually draw insightful information from them.
 The analysis of such data can help developers to: 
-\begin{itemize}[wide=10pt,noitemsep,topsep=0pt]
+\begin{itemize}[wide=10pt,noitemsep,topsep=0pt,label={}]
     \item\textbf{Predict flaky tests}: As shown in \textsc{RQ3}, analysing the logs of test history is useful for predicting flakiness and assisting developers when a flaky failure occurs.
     \item \textbf{Identify the source or root cause}: \textit{``For debugging GUI tests, traces of all the called APIs can help in isolating the root of failure"} (P4).
     \item \textbf{Evaluate the flake rate:} In \textsc{RQ3}, we showed that the flake rate monitoring gives a fine grained assessment of flaky tests and therefore guides the mitigation strategies, \eg ignore flaky tests that flake rarely.
@@ -445,7 +451,7 @@ The analysis of such data can help developers to:
 \subsubsection{\textbf{Test validation}}
 \textsc{RQ3} showed that following testing guidelines is a key measure for preventing test flakiness. 
 Yet, according to 9 participants, the process of enforcing these guidelines still relies on manual reviews, and it could be assisted with:
-\begin{itemize}[wide=10pt,noitemsep,topsep=0pt]
+\begin{itemize}[wide=10pt,noitemsep,topsep=0pt,label={}]
 \item \textbf{Static analysis}: P10 described how preventing flakiness through code reviews can be redundant, \textit{``I keep rejecting tests that have sleep() statements"}, and suggested that a simple static analyser could help in this regard.
 P4 described a similar situation with GUI testing reviews and affirmed that \textit{``advanced static analysis could help to identify potential problems"}.
 
@@ -460,12 +466,12 @@ These variations can build on the known causes of non-determinism (\eg random in
 
 
 \paragraph{\textbf{Discussion:}}
-Our results confirm previous observations~\cite{eck_understanding_2019,Lam2019RootCausing,Lam2020UnderstandingReproducibility} and show that reproducing and debugging flaky tests remain the most challenging tasks for developers.
+Our results confirm previous observations~\cite{Eck2019,Lam2019RootCausing,Lam2020} and show that reproducing and debugging flaky tests remain the most challenging tasks for developers.
 %Cite other works on the localisation of the root cause
 Furthermore, our analysis accentuates the need for techniques and tools that monitor and analyse the system states to assist the prediction, debugging, and evaluation of flaky tests.
 This need is particularly relevant if we consider the results of \textsc{RQ1}, which suggested that flakiness can stem from the system interactions and factors that are external to the source code.
-Indeed, trace analysis could be a powerful tool that complements the current detection and prediction approaches, which rely mainly on the source code~\cite{bell_deflaker_2018,lam_idflakies_2019,Pinto2020,King2018,Bertolino2020}.
+Indeed, trace analysis could be a powerful tool that complements the current detection and prediction approaches, which rely mainly on the source code~\cite{Bell2018,Lam2019iDFlakies,Pinto2020,King2018,Bertolino2020}.
 Our results also show that a more fine-grained analysis of flaky tests, using the flake rate, can be more insightful for developers. 
-This aligns with the works that suggested that every test is potentially flaky~\cite{harman2018start}, and research studies should focus on (or at least consider) the level of flakiness instead of classifying tests as flaky and non-flaky.
+This aligns with the works that suggested that every test is potentially flaky~\cite{Harman2018}, and research studies should focus on (or at least consider) the level of flakiness instead of classifying tests as flaky and non-flaky.
 Finally, our participants expressed the need for automating the quality assessment of software tests through static analysis and variability-aware reruns.
-In particular, techniques that rerun tests with different configurations or inputs, like Shaker~\cite{Silva2020} and FLASH~\cite{dutta_detecting_2020}, seem very promising if we consider the role of external factors on flakiness.
+In particular, techniques that rerun tests with different configurations or inputs, like Shaker~\cite{Silva2020} and FLASH~\cite{Dutta2020}, seem very promising if we consider the role of external factors on flakiness.

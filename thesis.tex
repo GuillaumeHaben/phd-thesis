@@ -12,10 +12,17 @@
 \usepackage{boxedminipage, xspace}   
 \usepackage[T1]{fontenc}
 \usepackage{changepage}
+
+\usepackage{epigraph}
+\setlength\epigraphwidth{.65\textwidth}
+\setlength\epigraphrule{0pt}
+\renewcommand{\textflush}{flushright}
+
 \usepackage[export]{adjustbox}
 
 \usepackage{graphics, graphicx}
 \usepackage{subfig}
+\usepackage{caption}
 
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -23,6 +30,7 @@
 \usepackage[roman]{parnotes}
 % \usepackage{paralist}
 \usepackage{tabu}
+\usepackage{float}
 \usepackage{makecell}
 \usepackage{booktabs,multicol,multirow,graphicx,tabularx,ragged2e,dcolumn}
 \usepackage{tablefootnote}
@@ -31,15 +39,17 @@
 \usepackage{algorithmic}
 \usepackage[ruled,vlined]{algorithm2e}
 
-\usepackage{color}
+\usepackage{color, colortbl}
 \usepackage{tcolorbox}
 \usepackage{listings}
 \usepackage{framed}
 \usepackage{upquote}
 
-\usepackage{setspace}
 \usepackage{enumitem}
 \usepackage{nicefrac}
+\usepackage{microtype}
+\usepackage{setspace}
+\usepackage{hyperref}
 
 
 \newcommand{\etal}{\emph{et al}.\@\xspace}
@@ -102,14 +112,20 @@ basicstyle=\ttfamily\footnotesize
 }
 
 \input{glossary}
-\typeout{}
+
 \addbibresource{references.bib}
 
-\begin{document}		
+\begin{document}
 	\frontmatter
 	\pagenumbering{gobble}
 	
 	\input{cover}
+        \null\cleardoublepage
+
+        \vspace*{\fill}
+        \epigraph{\itshape God does not play dice with the universe.}{---\textsc{Albert EINSTEIN}, The Born-Einstein Letters 1916-55}
+
+        \null\cleardoublepage
 	
 	\linenumbers
 	\input{abstract}	
@@ -121,13 +137,17 @@ basicstyle=\ttfamily\footnotesize
 	\mainmatter	
 	
 	\input{introduction}
+        \input{background}
 	\input{related}
-	% \input{survey}
-	% \input{replication}
-	% \input{flakycat}
-	% \input{chromium}
+	\input{survey}
+	\input{replication}
+	\input{flakycat}
 	\input{sherloc}
+	\input{chromium}
 	\input{conclusion}
-	
-	% \backmatter
+
+        \glsaddall
+        \printglossary
+        
+	\backmatter
 \end{document}

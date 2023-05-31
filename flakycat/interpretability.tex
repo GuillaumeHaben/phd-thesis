@@ -15,8 +15,6 @@ As FlakyCat uses the CodeBERT representation of tests as input, using the previo
 % Our technique
 Our technique is inspired by delta debugging algorithms. Delta debugging is used to minimize failure-inducing inputs to a smaller size that still induces the same failure~\cite{zeller2002simplifying}. In our case, we are interested in the particular code statements linked with the most influential information for the model's decision.
 To identify them, we proceed with the following: We classify all the original test cases and save their similarity scores. We create new versions of each test. Each version is a copy of the original test minus one statement that was removed. 
-%We split statements in the test code based on the semicolon (statement separator token in Java). 
+
 Next, we feed the new versions to FlakyCat. Among all new versions for one test, we keep the one for which the similarity score endured the biggest drop compared to the original prediction score. 
 We consider the statement removed in this version as the most influential one.
-% When flakiness categorization results are presented to developers, the most influential statement can be highlighted to explain the rationale behind the assigned category.
-% We can also envision scenarios where multiple influential statements are highlighted gradually based on their contribution to the classification result.

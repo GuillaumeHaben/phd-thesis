@@ -4,7 +4,7 @@
 The objective of our study is to assess the effectiveness of FL techniques in identifying flaky classes.
 To achieve this, we need a set of flaky tests for which the responsible classes are already known. 
 For this, we rely on flakiness-fixing commits as they provide information about classes that were modified as part of the fix.
-Our assumption is that such classes are, at least, part of the root cause. % JJ-to-do: citation (to show that this is also a common pratice in FL? 
+Our assumption is that such classes are, at least, part of the root cause.
 To collect flaky classes, we followed a four-step process.
 
 \paragraph{Search} 
@@ -15,22 +15,16 @@ For each of the 1,089 projects, 902 from the first and 187 from the second set, 
 We look further into whether these commits are truly suitable for our purpose through the following processes. 
 
 \newcommand\mch[2]{\multicolumn{1}{>{\centering\arraybackslash}b{#1}}{#2}}
-% TODO: I don't really know if it makes sense to show #Flaky tests because:
-% When we don't know which particular test was flaky we over approximate it by
-% marking all test from the test class as flaky.
 
 
 \begin{table}[t]
-\vspace{-0.5em}
 \caption{Collected Data. \textit{ffc:} number of flakiness-fixing commits. \textit{all:} number of commits in the project.
-\vspace{-0.5em}
 \centering}
 \centering
 \label{tab:SD-info}
 \scalebox{0.8}{
 \begin{tabular}{l|cc|cc|cc}
 \toprule
-%Project & \# Commits & \# Flaky Tests & \multicolumn{3}{c|}{\# Tests} & \multicolumn{3}{c}{\# Classes} \\
 \textbf{Proj. } & \multicolumn{2}{c|}{\textbf{\#Commits}} & \multicolumn{2}{c|}{\textbf{\#Tests}} & \multicolumn{2}{c}{\textbf{\#Classes}} \\
  & ffc & all &  min - max & avg & min -- max & avg \\
 \midrule
@@ -42,38 +36,9 @@ Neo4j & 3 & 71,824 &  21 - 5,782 & 2,139 & 40 -- 1663 & 581.3 \\
 \midrule
 Total & 38 &  &  15 - 5,782 & 905 & 40 -- 1767 & 820.2 \\
 \bottomrule
-\end{tabular}
-}
-\vspace{-5mm}
+\end{tabular}}
 \end{table}
 
-
-%\begin{table}[t]
-%\begin{center}
-%\caption{Collected Data. \textit{ffc:} number of flakiness-fixing commits. \textit{all:} number of commits in the project.
-%\centering}
-%\centering
-%\label{tab:SD-info}
-%\scalebox{0.8}{
-%\begin{tabular}{l|cc|cc|cc|cc}
-%\toprule
-%Project & \# Commits & \# Flaky Tests & \multicolumn{3}{c|}{\# Tests} & \multicolumn{3}{c}{\# Classes} \\
-%\textbf{Proj. } & \multicolumn{2}{c|}{\textbf{\#Commits}} & \multicolumn{2}{c|}{\textbf{\#Tests}} & \multicolumn{2}{c}{\textbf{\#Classes}} & \multicolumn{2}{c}{\textbf{\#Cov.Classes}} \\
-% & ffc & all &  min - max & avg & min -- max & avg & min -- max & avg \\
-%\midrule
-%Hbase & 8 & 18,990 & 138 - 2,089 & 1,113 & 734 -- 1366 & 1053.4 & 2x -- 387x & 243x \\
-%Ignite & 14 & 27,903 & 15 - 1,018 & 174 & 72 -- 1767 & 1262.3 & 24x -- 716x & 463x \\
-%Pulsar & 10 & 8,516 & 194 - 1,326 & 626 & 171 -- 422 & 26059.7 & 2x -- 120x & 59x \\
-%Alluxio & 3 & 32,560 & 315 - 694 & 473 & 131 -- 817 & 360.3 & 19x -- 90x & 65x \\
-%Neo4j & 3 & 71,824 &  21 - 5,782 & 2,139 & 40 -- 1663 & 581.3 & 1x -- 480x & 163x \\
-%\midrule
-%Total & 38 &  &  15 - 5,782 & 905 & 40 -- 1767 & 820.2 & x -- x & x \\
-%\bottomrule
-%\end{tabular}
-%}
-%\end{center}
-%\vspace{-5mm}
-%\end{table}
 
 \paragraph{Inspection}
 The objective of this step is to filter commits that do not provide a clear indication about the flaky class. Hence, we look for flakiness-fixing commits containing any of the following keywords: \textit{fix, repair, solve, correct, patch, prevent}. Then, we analyse each commit and keep the ones that:
@@ -83,7 +48,7 @@ The objective of this step is to filter commits that do not provide a clear indi
     \item The changes are atomic enough (\ie containing only relevant changes) allowing us to discern the flaky class(es). 
 \end{itemize}
 
-This led to the selection of 85 commits from five projects. We further discarded 22 commits for which the flaky tests or commit were not retrievable (\eg rejected pull request), leaving 63 commits in the end. 
+This led to the selection of 85 commits from five projects. We further discarded 22 commits for which the flaky tests or commits were not retrievable (\eg rejected pull request), leaving 63 commits in the end. 
 
 
 \paragraph{Test execution}
@@ -91,15 +56,11 @@ This step aims to select commits that are usable in our evaluation.
 Our first question inspects the effectiveness of SBFL, a technique that requires a coverage matrix indicating the classes covered by each test.
 Hence, for a commit to be usable in our analysis, its test suite should be runnable allowing us to extract the coverage matrix.
 To ensure this, we used  \textsc{GZoltar}\footnote{\url{https://github.com/GZoltar/gzoltar/blob/master/com.gzoltar.ant/}}, a Maven plugin that allows collecting coverage information for each commit.
-% We found that for 44 commits our tool was not able to provide consistent results. In particular, 15 commits results were discarded because (i) the patches provided did not change the program behaviour (e.g. console prints, comments, build file modification) 2) only the test was patched (thus not addressing the flakiness behaviour ) 3) the commit was not included in the original repository (e.g. fork).
-% The other vast majority (i.e. 15) of the commits results were discarded as the flaky test could not be identified. 
-% Finally, for the remaining 14 commits , the tool was not able to provide any results due mainly to incompatible java version.
+
 For 11 commits, we were unable to run \textsc{GZoltar} due to an incompatible Java version. We also found that the flakiness patches were irrelevant in 10 commits.
 For instance, some commits were fixing modules in other programming languages or modifying non-source code files.
-% Need to check!
 Lastly, we filtered out four additional commits since the reported flaky failures were not \textit{flaky test failures}.
-Consequently, %this step resulted in 38 commits from 5 projects by dropping 
-we dropped 25 commits in addition. Table~\ref{tab:SD-info} summarises the retained projects.
+Consequently, we dropped 25 commits in addition. Table~\ref{tab:SD-info} summarises the retained projects.
 The complete list of flakiness-fixing commits is available in our replication package. 
 
 \paragraph{Extraction}
